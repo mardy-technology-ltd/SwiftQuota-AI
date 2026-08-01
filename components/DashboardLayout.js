@@ -8,12 +8,28 @@ import styles from "./DashboardLayout.module.css";
 export default function DashboardLayout({ children }) {
   const [theme, setTheme] = useState("dark");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/auth/profile");
+        const json = await res.json();
+        if (json.success) {
+          setProfile(json.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -73,6 +89,16 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         <div className={styles.sidebarFooter}>
+          <div className={styles.userProfile}>
+            <div className={styles.userAvatar}>
+              {(profile?.businessName || "A")[0].toUpperCase()}
+            </div>
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>{profile?.businessName || "Admin User"}</span>
+              <span className={styles.userEmail}>{profile?.email || "admin@swiftquote.ai"}</span>
+            </div>
+          </div>
+
           <button onClick={toggleTheme} className={styles.themeBtn}>
             <span>{theme === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode"}</span>
             <span>Toggle</span>
@@ -95,7 +121,7 @@ export default function DashboardLayout({ children }) {
             ☰
           </button>
           <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: "500" }}>
-            Apex Creative Agency — Admin Workspace
+            {profile?.businessName || "Apex Creative Agency"} — Admin Workspace
           </div>
           <Link
             href="/"
