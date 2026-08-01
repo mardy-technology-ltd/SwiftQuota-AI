@@ -46,6 +46,74 @@ export default function FormBuilderPage() {
   // Submit state
   const [submitting, setSubmitting] = useState(false);
 
+  // AI Parser state
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [parsing, setParsing] = useState(false);
+  const [aiError, setAiError] = useState("");
+
+  const handleAiParse = async () => {
+    if (!aiPrompt.trim()) return;
+    setParsing(true);
+    setAiError("");
+
+    try {
+      const res = await fetch("/api/ai/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: aiPrompt }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.data) {
+        const parsed = json.data;
+
+        // 1. Match client
+        if (parsed.clientName) {
+          const matched = clients.find(
+            (c) => c.name.toLowerCase().includes(parsed.clientName.toLowerCase())
+          );
+          if (matched) {
+            setSelectedClientId(matched.id);
+          } else {
+            console.log(`Parsed client name "${parsed.clientName}" not matched.`);
+          }
+        }
+
+        // 2. Document Type
+        if (parsed.documentType) {
+          setDocType(parsed.documentType.toUpperCase());
+        }
+
+        // 3. Populate Items
+        if (parsed.items && parsed.items.length > 0) {
+          setItems(parsed.items.map(item => ({
+            description: item.description || "",
+            quantity: item.quantity || 1,
+            rate: item.rate || 0
+          })));
+        }
+
+        // 4. Set Tax & Discount
+        if (typeof parsed.tax === "number") {
+          setTaxRate(parsed.tax);
+        }
+        if (typeof parsed.discount === "number") {
+          setDiscount(parsed.discount);
+        }
+        
+        // Clear prompt
+        setAiPrompt("");
+      } else {
+        setAiError(json.error || "Could not parse text. Please check the format or enter manually.");
+      }
+    } catch (err) {
+      console.error("AI Parse failed", err);
+      setAiError("An unexpected error occurred. Please try again.");
+    } finally {
+      setParsing(false);
+    }
+  };
+
   // Fetch clients on mount
   const fetchClients = async () => {
     try {
@@ -187,6 +255,28 @@ export default function FormBuilderPage() {
       <div className={styles.splitGrid}>
         {/* LEFT COLUMN: FORM EDITOR */}
         <form onSubmit={handleSubmit} className={styles.formCard}>
+          {/* AI Quick Fill Section */}
+          <div className={styles.aiSection}>
+            <div className={styles.sectionTitle} style={{ borderBottom: "none", marginBottom: 0, paddingBottom: 0 }}>
+              🪄 AI Quick Fill
+            </div>
+            {aiError && <div className={styles.errorBanner}>{aiError}</div>}
+            <textarea
+              className={styles.aiTextArea}
+              placeholder="Describe your invoice/estimate in plain English (e.g., 'Create an estimate for Liton. Add Web Development for 10 hours at $50/hr and UI Design for 5 hours at $60/hr. Apply 10% discount.')"
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              disabled={parsing}
+            />
+            <button
+              type="button"
+              className={styles.aiSubmitBtn}
+              onClick={handleAiParse}
+              disabled={parsing || !aiPrompt.trim()}
+            >
+              {parsing ? "Parsing text..." : "Parse with AI ⚡"}
+            </button>
+          </div>
           {/* Section 1: Document Type & Number */}
           <div>
             <div className={styles.sectionTitle}>1. Document Type & Number</div>
