@@ -44,6 +44,14 @@ export default function SettingsPage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
+    if (!isLocked) {
+      const confirmSave = window.confirm(
+        `Are you sure you want to save these business details?\n\nBusiness Name: ${businessName}\nEmail Address: ${email}\n\nOnce saved, these details will be permanently locked to your license to prevent account abuse. Double check for spelling errors!`
+      );
+      if (!confirmSave) return;
+    }
+
     setSaving(true);
     setSuccessMsg("");
     setErrorMsg("");
@@ -117,7 +125,17 @@ export default function SettingsPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Business Name</label>
-            {isLocked && <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>}
+            {isLocked && (
+              <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
+                <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>
+                <a
+                  href={`mailto:support@swiftquote-ai.com?subject=Request Business Name Update&body=Hello Support,%0D%0A%0D%0AI need to update my locked Business Name.%0D%0A%0D%0ACurrent Name: ${businessName}%0D%0ANew Name: [Enter Correct Name]` }
+                  style={{ fontSize: "0.75rem", color: "var(--primary)", fontWeight: "600", textDecoration: "underline", cursor: "pointer" }}
+                >
+                  Request Change ✉️
+                </a>
+              </div>
+            )}
           </div>
           <input
             type="text"
@@ -140,7 +158,17 @@ export default function SettingsPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
-            {isLocked && <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>}
+            {isLocked && (
+              <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
+                <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>
+                <a
+                  href={`mailto:support@swiftquote-ai.com?subject=Request Email Address Update&body=Hello Support,%0D%0A%0D%0AI need to update my locked Email Address.%0D%0A%0D%0ACurrent Email: ${email}%0D%0ANew Email: [Enter Correct Email]` }
+                  style={{ fontSize: "0.75rem", color: "var(--primary)", fontWeight: "600", textDecoration: "underline", cursor: "pointer" }}
+                >
+                  Request Change ✉️
+                </a>
+              </div>
+            )}
           </div>
           <input
             type="email"
