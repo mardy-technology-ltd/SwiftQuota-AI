@@ -10,6 +10,7 @@ export default function SettingsPage() {
   const [currency, setCurrency] = useState("USD");
   const [taxRate, setTaxRate] = useState(0);
   const [paymentDetails, setPaymentDetails] = useState("");
+  const [isLocked, setIsLocked] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,6 +31,7 @@ export default function SettingsPage() {
           setCurrency(profile.currency || "USD");
           setTaxRate(profile.taxRate || 0);
           setPaymentDetails(profile.paymentDetails || "");
+          setIsLocked(!!profile.isLocked);
         }
       } catch (err) {
         console.error("Failed to load profile settings", err);
@@ -102,23 +104,57 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {isLocked ? (
+          <div style={{ background: "rgba(99, 102, 241, 0.1)", border: "1px solid rgba(99, 102, 241, 0.2)", color: "#a5b4fc", padding: "0.75rem", borderRadius: "10px", fontSize: "0.8rem", textAlign: "left", lineHeight: "1.4" }}>
+            🔒 <strong>License details are locked:</strong> To prevent multiple different businesses from abusing a single subscription, your registered Business Name and Email are permanent. Other settings can still be modified.
+          </div>
+        ) : (
+          <div style={{ background: "rgba(245, 158, 11, 0.1)", border: "1px solid rgba(245, 158, 11, 0.2)", color: "#fcd34d", padding: "0.75rem", borderRadius: "10px", fontSize: "0.8rem", textAlign: "left", lineHeight: "1.4" }}>
+            ⚠️ <strong>License Setup:</strong> Once you customize and save your Business Name and Email, they will be permanently locked to your subscription to prevent sharing. Please verify details carefully.
+          </div>
+        )}
+
         <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-          <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Business Name</label>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Business Name</label>
+            {isLocked && <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>}
+          </div>
           <input
             type="text"
             required
-            style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
+            disabled={isLocked}
+            style={{
+              background: isLocked ? "rgba(255, 255, 255, 0.03)" : "rgba(2, 6, 23, 0.6)",
+              padding: "0.75rem 1rem",
+              borderRadius: "10px",
+              border: "1px solid var(--border)",
+              color: isLocked ? "var(--text-muted)" : "var(--foreground)",
+              outline: "none",
+              cursor: isLocked ? "not-allowed" : "text"
+            }}
             value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}
           />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-          <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Email Address</label>
+            {isLocked && <span style={{ fontSize: "0.75rem", color: "#34d399", fontWeight: "600" }}>🔒 Locked</span>}
+          </div>
           <input
             type="email"
             required
-            style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
+            disabled={isLocked}
+            style={{
+              background: isLocked ? "rgba(255, 255, 255, 0.03)" : "rgba(2, 6, 23, 0.6)",
+              padding: "0.75rem 1rem",
+              borderRadius: "10px",
+              border: "1px solid var(--border)",
+              color: isLocked ? "var(--text-muted)" : "var(--foreground)",
+              outline: "none",
+              cursor: isLocked ? "not-allowed" : "text"
+            }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

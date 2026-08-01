@@ -14,6 +14,8 @@ export async function GET() {
       });
     }
 
+    const isLocked = user.businessName !== 'Apex Creative Agency' && user.email !== 'admin@swiftquote.ai';
+
     return NextResponse.json({
       success: true,
       data: {
@@ -24,6 +26,7 @@ export async function GET() {
         currency: user.currency || 'USD',
         taxRate: user.taxRate || 0,
         paymentDetails: user.paymentDetails || '',
+        isLocked,
       }
     });
   } catch (error) {
@@ -47,11 +50,29 @@ export async function POST(request) {
       });
     }
 
+    // Lock condition: if already customized, do not allow further changes to businessName and email
+    const isCurrentlyCustomized = user.businessName !== 'Apex Creative Agency' && user.email !== 'admin@swiftquote.ai';
+
+    let finalBusinessName = user.businessName;
+    let finalEmail = user.email;
+
+    if (!isCurrentlyCustomized) {
+      if (businessName !== undefined) finalBusinessName = businessName;
+      if (email !== undefined) finalEmail = email;
+    } else {
+      if (businessName !== undefined && businessName !== user.businessName) {
+        return NextResponse.json({ success: false, error: 'Business name is locked and cannot be changed.' }, { status: 400 });
+      }
+      if (email !== undefined && email !== user.email) {
+        return NextResponse.json({ success: false, error: 'Email address is locked and cannot be changed.' }, { status: 400 });
+      }
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
-        email: email !== undefined ? email : user.email,
-        businessName: businessName !== undefined ? businessName : user.businessName,
+        email: finalEmail,
+        businessName: finalBusinessName,
         phone: phone !== undefined ? phone : user.phone,
         address: address !== undefined ? address : user.address,
         currency: currency !== undefined ? currency : user.currency,
@@ -66,3 +87,4 @@ export async function POST(request) {
     return NextResponse.json({ success: false, error: 'Failed to update profile' }, { status: 500 });
   }
 }
+
