@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SwiftQuote AI
 
-## Getting Started
+> Instant Invoice & Quote Builder for Solopreneurs powered by Next.js, Prisma, SQLite & Interactive HTML5 Digital Signatures.
 
-First, run the development server:
+## ⚡ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dark-Mode First SaaS Design System**: Built with modern CSS custom variables, Outfit Google font, glassmorphism, and responsive layouts.
+- **Solopreneur Dashboard**: Track total revenue, active estimates, outstanding balances, and recent client activity in real-time.
+- **Invoice & Estimate Form Builder**: Live paper document preview with real-time recalculation of subtotals, tax rates, and discounts.
+- **Public Client Portal (`/view/[id]`)**: Client-facing portal allowing clients to view estimates, draw legally binding HTML5 canvas signatures, and download A4/Letter PDF printouts.
+- **Cookie-based Session Authentication**: Secure HTTP-only cookie authentication with protected dashboard routes via Next.js Proxy/Middleware.
+- **Prisma ORM & SQLite Database**: Relational schema modeling Solopreneurs, Clients, and Invoices/Estimates with seed data.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Database Migration & Seed**:
+   ```bash
+   npx prisma migrate dev --name init
+   npx prisma db seed
+   ```
 
-## Learn More
+3. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## 🔑 Demo Credentials
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Email**: `admin@swiftquote.ai`
+- **Password**: `EliteStandard2026!`

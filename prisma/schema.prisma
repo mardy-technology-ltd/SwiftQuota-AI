@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(uuid())
+  email          String           @unique
+  passwordHash   String
+  businessName   String?
+  address        String?
+  phone          String?
+  logoUrl        String?
+  currency       String           @default("USD")
+  taxRate        Float            @default(0.0)
+  paymentDetails String?
+  clients        Client[]
+  documents      InvoiceOrQuote[]
+  createdAt      DateTime         @default(now())
+}
+
+model Client {
+  id        String           @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  address   String?
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents InvoiceOrQuote[]
+  createdAt DateTime         @default(now())
+}
+
+model InvoiceOrQuote {
+  id            String    @id @default(uuid())
+  number        String
+  type          String
+  status        String
+  issuedDate    DateTime  @default(now())
+  dueDate       DateTime
+  items         String
+  taxRate       Float     @default(0.0)
+  discount      Float     @default(0.0)
+  totalAmount   Float
+  signaturePath String?
+  signedAt      DateTime?
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+}
