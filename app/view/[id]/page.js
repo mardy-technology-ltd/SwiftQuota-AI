@@ -6,6 +6,24 @@ import styles from "./view.module.css";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const doc = await prisma.invoiceOrQuote.findUnique({
+    where: { id },
+    select: { number: true, type: true },
+  });
+
+  if (!doc) {
+    return { title: "Document Not Found - SwiftQuote AI" };
+  }
+
+  const typeLabel = doc.type === "INVOICE" ? "Invoice" : "Estimate";
+  return {
+    title: `${typeLabel} ${doc.number} - SwiftQuote AI`,
+    description: `View and sign ${typeLabel.toLowerCase()} #${doc.number} via SwiftQuote AI Client Portal.`,
+  };
+}
+
 export default async function PublicDocumentView({ params }) {
   const { id } = await params;
 

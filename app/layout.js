@@ -8,9 +8,8 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "SwiftQuote AI - Instant Invoice & Quote Builder for Solopreneurs",
-  description:
-    "Draft professional invoices and estimates in seconds using AI and get digital signatures instantly.",
+  title: "SwiftQuote AI - Solopreneur Invoicing",
+  description: "Create and send professional estimates and invoices with digital signatures in seconds.",
   keywords: ["AI Invoice", "Quote Builder", "Solopreneurs", "Digital Signatures", "Invoicing Software"],
   authors: [{ name: "SwiftQuote AI Team" }],
 };
