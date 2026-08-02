@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./view.module.css";
 
@@ -19,6 +19,15 @@ export default function ClientPaymentModal({
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
+
+  // Lock background scrolling while modal is active
+  useEffect(() => {
+    const origOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = origOverflow;
+    };
+  }, []);
 
   // Credit Card Form State
   const [cardName, setCardName] = useState("");

@@ -226,22 +226,77 @@
   page-break-inside: avoid;
 }
 
-/* DARK THEME PAYMENT MODAL CARD (MATCHING SWIFTQUOTE AI BRAND AESTHETICS) */
+/* DARK THEME PAYMENT MODAL OVERLAY & CARD */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  overflow-y: auto;
+  animation: fadeInOverlay 0.25s ease-out forwards;
+}
+
 .darkModalCard {
   background: #0f172a;
   color: #f8fafc;
   width: 100%;
   max-width: 490px;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 22px;
   padding: 2rem;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(99, 102, 241, 0.25);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.3);
   font-family: inherit;
   backdrop-filter: blur(16px);
+  position: relative;
+  z-index: 10000;
+  animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.darkModalCard::-webkit-scrollbar {
+  width: 6px;
+}
+
+.darkModalCard::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.darkModalCard::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 4px;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 
 .darkModalHeader {
   display: flex;
