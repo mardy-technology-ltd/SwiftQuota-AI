@@ -18,6 +18,7 @@ export default function SettingsPage() {
   const [nagadNumber, setNagadNumber] = useState("");
   const [bankDetails, setBankDetails] = useState("");
   const [paymentLink, setPaymentLink] = useState("");
+  const [activePaymentTab, setActivePaymentTab] = useState("card");
   const [isLocked, setIsLocked] = useState(false);
 
   const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -421,78 +422,271 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Payment Instructions / Bank Wire Info</label>
-            <textarea
-              style={{
-                background: "rgba(2, 6, 23, 0.6)",
-                padding: "0.75rem 1rem",
-                borderRadius: "10px",
-                border: "1px solid var(--border)",
-                color: "var(--foreground)",
-                outline: "none",
-                minHeight: "70px",
-                resize: "vertical",
-                fontFamily: "inherit",
-              }}
-              value={paymentDetails}
-              placeholder="e.g. Please remit payment within 14 days of invoice date."
-              onChange={(e) => setPaymentDetails(e.target.value)}
-            />
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#ec4899" }}>bKash Number (Merchant/Personal)</label>
-              <input
-                type="text"
-                placeholder="e.g. 01712345678"
-                style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
-                value={bkashNumber}
-                onChange={(e) => setBkashNumber(e.target.value)}
-              />
+          {/* INTERACTIVE MERCHANT PAYMENT CONFIGURATION CARD (IMAGE 3 BRAND AESTHETICS) */}
+          <div
+            style={{
+              background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f172a 100%)",
+              borderRadius: "18px",
+              padding: "1.5rem",
+              border: "1px solid rgba(99, 102, 241, 0.3)",
+              boxShadow: "0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.15)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.2rem",
+              marginTop: "0.5rem",
+            }}
+          >
+            <div>
+              <h3 style={{ fontSize: "1rem", fontWeight: 800, color: "#ffffff", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                💳 Client Payment Methods & Gateway Configuration
+              </h3>
+              <p style={{ fontSize: "0.8rem", color: "#94a3b8", margin: "0.25rem 0 0 0" }}>
+                Configure your bKash, Nagad, Bank Wire, or Stripe link. Your clients will see these channels on your invoices.
+              </p>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#f97316" }}>Nagad Number</label>
-              <input
-                type="text"
-                placeholder="e.g. 01812345678"
-                style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
-                value={nagadNumber}
-                onChange={(e) => setNagadNumber(e.target.value)}
-              />
-            </div>
-          </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#3b82f6" }}>Bank Transfer Account Details</label>
-            <textarea
+            {/* PAYMENT TABS (IMAGE 3 STYLE) */}
+            <div
               style={{
-                background: "rgba(2, 6, 23, 0.6)",
-                padding: "0.75rem 1rem",
-                borderRadius: "10px",
-                border: "1px solid var(--border)",
-                color: "var(--foreground)",
-                outline: "none",
-                minHeight: "70px",
-                resize: "vertical",
-                fontFamily: "inherit",
+                display: "flex",
+                background: "#1e293b",
+                padding: "0.35rem",
+                borderRadius: "12px",
+                gap: "0.3rem",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                overflowX: "auto",
               }}
-              value={bankDetails}
-              placeholder="Bank: City Bank PLC | Account Name: Apex Creative | Account #: 123456789 | Branch: Gulshan | Routing: 11026"
-              onChange={(e) => setBankDetails(e.target.value)}
-            />
-          </div>
+            >
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("card")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "card" ? "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)" : "transparent",
+                  color: activePaymentTab === "card" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.6rem 0.65rem",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                💳 Card / Stripe
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("bkash")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "bkash" ? "#ec4899" : "transparent",
+                  color: activePaymentTab === "bkash" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.6rem 0.65rem",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                💖 bKash
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("nagad")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "nagad" ? "#f97316" : "transparent",
+                  color: activePaymentTab === "nagad" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.6rem 0.65rem",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                🟠 Nagad
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("bank")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "bank" ? "#3b82f6" : "transparent",
+                  color: activePaymentTab === "bank" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.6rem 0.65rem",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                🏦 Bank Wire
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("notes")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "notes" ? "#10b981" : "transparent",
+                  color: activePaymentTab === "notes" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.6rem 0.65rem",
+                  borderRadius: "8px",
+                  fontSize: "0.82rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                📄 Instructions
+              </button>
+            </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#10b981" }}>Online Card / Gateway Payment Link (Stripe/SSLCommerz URL)</label>
-            <input
-              type="text"
-              placeholder="https://buy.stripe.com/example or https://pay.yourdomain.com"
-              style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
-              value={paymentLink}
-              onChange={(e) => setPaymentLink(e.target.value)}
-            />
+            {/* TAB CONTENTS */}
+            {activePaymentTab === "card" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#a1a1aa" }}>
+                    Online Card / Gateway Payment Link (Stripe / SSLCommerz URL)
+                  </label>
+                  <div style={{ display: "flex", gap: "0.3rem" }}>
+                    <span style={{ background: "#1a1f71", color: "#fff", fontSize: "0.6rem", fontWeight: 900, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>VISA</span>
+                    <span style={{ background: "#eb001b", color: "#fff", fontSize: "0.6rem", fontWeight: 900, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>MC</span>
+                    <span style={{ background: "#0077a2", color: "#fff", fontSize: "0.6rem", fontWeight: 800, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>AMEX</span>
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  placeholder="https://buy.stripe.com/example or https://pay.yourdomain.com"
+                  style={{
+                    background: "#1e293b",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "10px",
+                    border: "1px solid #334155",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                  }}
+                  value={paymentLink}
+                  onChange={(e) => setPaymentLink(e.target.value)}
+                />
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients clicking "Pay via Card" on your invoices will be directed to this link to complete their transaction securely.
+                </p>
+              </div>
+            )}
+
+            {activePaymentTab === "bkash" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f472b6" }}>
+                  bKash Number (Merchant / Personal)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 01712345678"
+                  style={{
+                    background: "#1e293b",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "10px",
+                    border: "1px solid #334155",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                  }}
+                  value={bkashNumber}
+                  onChange={(e) => setBkashNumber(e.target.value)}
+                />
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients will see this bKash number on invoice checkouts with a 1-click Copy button to transfer funds.
+                </p>
+              </div>
+            )}
+
+            {activePaymentTab === "nagad" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#fb923c" }}>
+                  Nagad Number (Personal / Merchant)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 01812345678"
+                  style={{
+                    background: "#1e293b",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "10px",
+                    border: "1px solid #334155",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                  }}
+                  value={nagadNumber}
+                  onChange={(e) => setNagadNumber(e.target.value)}
+                />
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients will see this Nagad number on invoice checkouts with a 1-click Copy button.
+                </p>
+              </div>
+            )}
+
+            {activePaymentTab === "bank" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#60a5fa" }}>
+                  Bank Transfer / Wire Account Details
+                </label>
+                <textarea
+                  style={{
+                    background: "#1e293b",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "10px",
+                    border: "1px solid #334155",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    minHeight: "80px",
+                    fontFamily: "inherit",
+                  }}
+                  value={bankDetails}
+                  placeholder="Bank: City Bank PLC&#10;Account Name: Apex Creative&#10;Account #: 123456789&#10;Branch: Gulshan&#10;Routing: 11026"
+                  onChange={(e) => setBankDetails(e.target.value)}
+                />
+              </div>
+            )}
+
+            {activePaymentTab === "notes" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#34d399" }}>
+                  Invoice Payment Instructions & Terms
+                </label>
+                <textarea
+                  style={{
+                    background: "#1e293b",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "10px",
+                    border: "1px solid #334155",
+                    color: "#ffffff",
+                    fontSize: "0.9rem",
+                    outline: "none",
+                    minHeight: "80px",
+                    fontFamily: "inherit",
+                  }}
+                  value={paymentDetails}
+                  placeholder="e.g. Please remit payment within 14 days of invoice date. Thank you for your business!"
+                  onChange={(e) => setPaymentDetails(e.target.value)}
+                />
+              </div>
+            )}
           </div>
 
           <button
