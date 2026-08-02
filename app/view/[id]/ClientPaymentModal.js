@@ -12,6 +12,7 @@ export default function ClientPaymentModal({
   onClose,
   showPlanSelection = true,
   initialPlan = "lifetime",
+  isInline = false,
 }) {
   const [selectedBillingCycle, setSelectedBillingCycle] = useState(initialPlan); // "lifetime" | "monthly" | "yearly"
   const [activeTab, setActiveTab] = useState("card");
@@ -21,14 +22,15 @@ export default function ClientPaymentModal({
   const [submitting, setSubmitting] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
 
-  // Lock background scrolling while modal is active
+  // Lock background scrolling while modal is active (only if not inline)
   useEffect(() => {
+    if (isInline) return;
     const origOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = origOverflow;
     };
-  }, []);
+  }, [isInline]);
 
   // Credit Card Form State
   const [cardName, setCardName] = useState("");
@@ -134,25 +136,30 @@ export default function ClientPaymentModal({
     handleSubmitTrx("CREDIT_CARD", cardRef);
   };
 
-  return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.darkModalCard} onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className={styles.darkModalHeader}>
-          <div>
-            <h2 className={styles.darkModalTitle}>
-              {showPlanSelection ? "Upgrade & Complete Checkout" : "Complete Payment"}
-            </h2>
-            <p className={styles.darkModalSubtitle}>
-              Total Payable:{" "}
-              <span className={styles.highlightAmount}>
-                {currency} {currentPayableAmount.toFixed(2)}
-                {getBillingPeriodLabel()}
-              </span>
-            </p>
-          </div>
-          <button className={styles.darkCloseBtn} onClick={onClose}>×</button>
+  const renderCardBody = () => (
+    <div
+      className={styles.darkModalCard}
+      style={isInline ? { maxWidth: "100%", width: "100%", animation: "none", margin: "1.25rem 0 0 0" } : {}}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Header */}
+      <div className={styles.darkModalHeader}>
+        <div>
+          <h2 className={styles.darkModalTitle}>
+            {showPlanSelection ? "Upgrade & Complete Checkout" : "Complete Payment"}
+          </h2>
+          <p className={styles.darkModalSubtitle}>
+            Total Payable:{" "}
+            <span className={styles.highlightAmount}>
+              {currency} {currentPayableAmount.toFixed(2)}
+              {getBillingPeriodLabel()}
+            </span>
+          </p>
         </div>
+        {!isInline && onClose && (
+          <button className={styles.darkCloseBtn} onClick={onClose}>×</button>
+        )}
+      </div>
 
         {/* CHOOSE YOUR PLAN SECTION */}
         {showPlanSelection && (
@@ -498,7 +505,16 @@ export default function ClientPaymentModal({
             </button>
           </div>
         )}
-      </div>
+    </div>
+  );
+
+  if (isInline) {
+    return renderCardBody();
+  }
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      {renderCardBody()}
     </div>
   );
 }

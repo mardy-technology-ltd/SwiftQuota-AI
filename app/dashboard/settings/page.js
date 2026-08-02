@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ClientPaymentModal from "@/app/view/[id]/ClientPaymentModal";
 
 export default function SettingsPage() {
   const [businessName, setBusinessName] = useState("");
@@ -572,61 +573,20 @@ export default function SettingsPage() {
                 <div style={{ fontSize: "0.8rem" }}>Client Details • Line Items • Totals & Math</div>
               </div>
 
-              {/* Live Interactive Payment Action Banner Visual Preview */}
-              <div
-                style={{
-                  background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%)",
-                  color: "#ffffff",
-                  borderRadius: "14px",
-                  padding: "1rem 1.25rem",
-                  marginBottom: "1.5rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  boxShadow: "0 10px 25px rgba(30, 27, 75, 0.35)",
-                  border: "1px solid rgba(99, 102, 241, 0.35)",
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#ffffff", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                    💳 Secure Client Checkout Action Banner
-                  </div>
-                  <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.45rem", flexWrap: "wrap" }}>
-                    <span style={{ background: "rgba(255, 255, 255, 0.15)", color: "#fff", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
-                      💳 Card / Gateway
-                    </span>
-                    {bkashNumber ? (
-                      <span style={{ background: "rgba(236, 72, 153, 0.3)", color: "#f472b6", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
-                        💖 bKash ({bkashNumber})
-                      </span>
-                    ) : (
-                      <span style={{ background: "rgba(236, 72, 153, 0.15)", color: "#f472b6", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
-                        💖 bKash
-                      </span>
-                    )}
-                    {nagadNumber ? (
-                      <span style={{ background: "rgba(249, 115, 22, 0.3)", color: "#fb923c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
-                        🟠 Nagad ({nagadNumber})
-                      </span>
-                    ) : (
-                      <span style={{ background: "rgba(249, 115, 22, 0.15)", color: "#fb923c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
-                        🟠 Nagad
-                      </span>
-                    )}
-                    {bankDetails ? (
-                      <span style={{ background: "rgba(59, 130, 246, 0.3)", color: "#60a5fa", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
-                        🏦 Bank Wire
-                      </span>
-                    ) : (
-                      <span style={{ background: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
-                        🏦 Bank Wire
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div style={{ background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)", color: "#ffffff", padding: "0.55rem 1rem", borderRadius: "10px", fontSize: "0.8rem", fontWeight: 800, whiteSpace: "nowrap", boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)" }}>
-                  🔒 Pay Invoice Now
-                </div>
+              {/* Live Interactive Payment Card Preview (Image 3 Style Inline) */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <ClientPaymentModal
+                  totalAmount={1500}
+                  currency={currency || "USD"}
+                  merchantPaymentInfo={{
+                    bkashNumber,
+                    nagadNumber,
+                    bankDetails,
+                    paymentLink,
+                  }}
+                  showPlanSelection={false}
+                  isInline={true}
+                />
               </div>
             </div>
 
