@@ -9,6 +9,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("web-design");
   const [openFaq, setOpenFaq] = useState(null);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState("lifetime");
 
   const mockPrompts = {
     "web-design": {
@@ -287,7 +288,10 @@ export default function Home() {
                 </li>
               </ul>
               <button
-                onClick={() => setShowCheckoutModal(true)}
+                onClick={() => {
+                  setCheckoutPlan("monthly");
+                  setShowCheckoutModal(true);
+                }}
                 className={`${styles.planCta} ${styles.planCtaStandard}`}
               >
                 Start 14-Day Free Trial
@@ -321,7 +325,10 @@ export default function Home() {
                 </li>
               </ul>
               <button
-                onClick={() => setShowCheckoutModal(true)}
+                onClick={() => {
+                  setCheckoutPlan("lifetime");
+                  setShowCheckoutModal(true);
+                }}
                 className={`${styles.planCta} ${styles.planCtaFeatured}`}
               >
                 Get Lifetime Access — $39
@@ -333,8 +340,8 @@ export default function Home() {
         {/* SUBSCRIPTION CHECKOUT MODAL */}
         {showCheckoutModal && (
           <ClientPaymentModal
-            totalAmount={120}
             currency="USD"
+            initialPlan={checkoutPlan}
             showPlanSelection={true}
             onClose={() => setShowCheckoutModal(false)}
           />

@@ -6,13 +6,14 @@ import styles from "./view.module.css";
 
 export default function ClientPaymentModal({
   documentId,
-  totalAmount = 120,
+  totalAmount = 39,
   currency = "USD",
   merchantPaymentInfo,
   onClose,
   showPlanSelection = true,
+  initialPlan = "lifetime",
 }) {
-  const [selectedBillingCycle, setSelectedBillingCycle] = useState("yearly"); // "yearly" | "monthly"
+  const [selectedBillingCycle, setSelectedBillingCycle] = useState(initialPlan); // "lifetime" | "monthly" | "yearly"
   const [activeTab, setActiveTab] = useState("card");
   const [senderPhone, setSenderPhone] = useState("");
   const [trxId, setTrxId] = useState("");
@@ -41,10 +42,19 @@ export default function ClientPaymentModal({
 
   // Dynamic calculated amount based on plan selection or passed document total
   const currentPayableAmount = showPlanSelection
-    ? selectedBillingCycle === "yearly"
-      ? 120
-      : 12
+    ? selectedBillingCycle === "lifetime"
+      ? 39
+      : selectedBillingCycle === "yearly"
+      ? 90
+      : 9
     : totalAmount;
+
+  const getBillingPeriodLabel = () => {
+    if (!showPlanSelection) return "";
+    if (selectedBillingCycle === "lifetime") return " / one-time";
+    if (selectedBillingCycle === "yearly") return " / year";
+    return " / month";
+  };
 
   const handleCopy = (text, fieldName) => {
     navigator.clipboard.writeText(text);
@@ -137,32 +147,34 @@ export default function ClientPaymentModal({
               Total Payable:{" "}
               <span className={styles.highlightAmount}>
                 {currency} {currentPayableAmount.toFixed(2)}
-                {showPlanSelection && (selectedBillingCycle === "yearly" ? " / year" : " / month")}
+                {getBillingPeriodLabel()}
               </span>
             </p>
           </div>
           <button className={styles.darkCloseBtn} onClick={onClose}>×</button>
         </div>
 
-        {/* CHOOSE YOUR PLAN SECTION (MATCHING REFERENCE IMAGE) */}
+        {/* CHOOSE YOUR PLAN SECTION */}
         {showPlanSelection && (
           <div className={styles.planSelectionWrapper}>
             <div className={styles.sectionHeader} style={{ marginBottom: "0.5rem" }}>Choose your plan</div>
 
+            {/* Lifetime Option */}
             <div
-              className={`${styles.planOptionCard} ${selectedBillingCycle === "yearly" ? styles.planOptionActive : ""}`}
-              onClick={() => setSelectedBillingCycle("yearly")}
+              className={`${styles.planOptionCard} ${selectedBillingCycle === "lifetime" ? styles.planOptionActive : ""}`}
+              onClick={() => setSelectedBillingCycle("lifetime")}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
                 <div className={styles.radioCheckCircle}>
-                  {selectedBillingCycle === "yearly" && <span className={styles.radioCheckInner}>✓</span>}
+                  {selectedBillingCycle === "lifetime" && <span className={styles.radioCheckInner}>✓</span>}
                 </div>
-                <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Yearly</span>
-                <span className={styles.discountTag}>-16%</span>
+                <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Founder Lifetime Pass</span>
+                <span className={styles.discountTag} style={{ background: "#6366f1", color: "#ffffff" }}>BEST VALUE</span>
               </div>
-              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$120/year</div>
+              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$39/one-time</div>
             </div>
 
+            {/* Monthly Option */}
             <div
               className={`${styles.planOptionCard} ${selectedBillingCycle === "monthly" ? styles.planOptionActive : ""}`}
               onClick={() => setSelectedBillingCycle("monthly")}
@@ -171,9 +183,24 @@ export default function ClientPaymentModal({
                 <div className={styles.radioCheckCircle}>
                   {selectedBillingCycle === "monthly" && <span className={styles.radioCheckInner}>✓</span>}
                 </div>
-                <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Monthly</span>
+                <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Solopreneur Monthly</span>
               </div>
-              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$12/month</div>
+              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$9/month</div>
+            </div>
+
+            {/* Yearly Option */}
+            <div
+              className={`${styles.planOptionCard} ${selectedBillingCycle === "yearly" ? styles.planOptionActive : ""}`}
+              onClick={() => setSelectedBillingCycle("yearly")}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+                <div className={styles.radioCheckCircle}>
+                  {selectedBillingCycle === "yearly" && <span className={styles.radioCheckInner}>✓</span>}
+                </div>
+                <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Solopreneur Yearly</span>
+                <span className={styles.discountTag}>-16%</span>
+              </div>
+              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$90/year</div>
             </div>
           </div>
         )}
