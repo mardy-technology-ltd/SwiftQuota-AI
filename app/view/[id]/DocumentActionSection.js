@@ -80,8 +80,12 @@ export default function DocumentActionSection({
             <div style={{ fontSize: "0.88rem", opacity: 0.9, marginTop: "0.3rem", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
               <span>Accepted:</span>
               <span style={{ background: "rgba(255, 255, 255, 0.15)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Credit/Debit Card</span>
-              <span style={{ background: "rgba(236, 72, 153, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>bKash</span>
-              <span style={{ background: "rgba(249, 115, 22, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Nagad</span>
+              <span style={{ background: "rgba(236, 72, 153, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+                bKash {merchantPaymentInfo?.bkashNumber ? `(${merchantPaymentInfo.bkashNumber})` : ""}
+              </span>
+              <span style={{ background: "rgba(249, 115, 22, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+                Nagad {merchantPaymentInfo?.nagadNumber ? `(${merchantPaymentInfo.nagadNumber})` : ""}
+              </span>
               <span style={{ background: "rgba(59, 130, 246, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Bank Wire</span>
             </div>
           </div>
