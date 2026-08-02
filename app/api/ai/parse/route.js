@@ -13,22 +13,22 @@ export async function POST(request) {
     if (apiKey) {
       console.log('Gemini API key found, calling Gemini...');
       try {
-        const prompt = `You are an expert AI Invoice & Estimate Parser. Parse the following description into a structured JSON object representing the document data.
-Strictly output JSON in the following format, with no markdown code blocks or wrapper text:
+        const prompt = `You are an expert AI Invoice & Estimate Parser. Parse the following user request into a structured JSON object.
+Strictly output JSON in the following format with no markdown formatting:
 {
-  "clientName": "Name of the client if specified, e.g. Liton",
-  "documentType": "ESTIMATE" or "INVOICE",
+  "clientName": "Client or company name if mentioned e.g. BBC company",
+  "documentType": "INVOICE" or "ESTIMATE",
   "items": [
-    { "description": "Short description of the service/item", "quantity": number, "rate": number }
+    { "description": "Description of work or service", "quantity": number, "rate": number }
   ],
-  "discount": percentage_discount_as_number_e_g_10,
-  "tax": percentage_tax_as_number_e_g_10
+  "discount": number,
+  "tax": number
 }
 
 Input Text: "${text.replace(/"/g, '\\"')}"`;
 
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -48,16 +48,14 @@ Input Text: "${text.replace(/"/g, '\\"')}"`;
             const parsedData = JSON.parse(responseText.trim());
             return NextResponse.json({ success: true, data: parsedData });
           }
-        } else {
-          console.warn('Gemini API call failed with status', res.status);
         }
       } catch (geminiError) {
         console.error('Error during Gemini API parsing:', geminiError);
       }
     }
 
-    // Offline / Fallback Parser
-    console.log('Running offline regex parser fallback...');
+    // Smart Offline Natural Language Parser Fallback
+    console.log('Running smart offline natural language parser fallback...');
     const parsedData = parseOffline(text);
     return NextResponse.json({ success: true, data: parsedData });
   } catch (error) {
@@ -75,31 +73,36 @@ function parseOffline(text) {
     tax: 10
   };
 
-  // 1. Document Type
+  // 1. Document Type Detection
   if (/invoice/i.test(text)) {
     result.documentType = 'INVOICE';
+  } else if (/estimate|quote/i.test(text)) {
+    result.documentType = 'ESTIMATE';
   }
 
-  // 2. Client Name
-  const clientMatch = text.match(/(?:for|to|client)\s+([A-Z][a-zA-Z0-9]*)/);
+  // 2. Client / Company Name Extraction
+  const clientMatch =
+    text.match(/(?:for|to|client)\s+([A-Za-z0-9\s]+?)(?:\s+(?:service|project|invoice|estimate|quote|items|with)|$)/i) ||
+    text.match(/client\s*:?\s*([A-Za-z0-9\s]+)/i);
   if (clientMatch) {
-    result.clientName = clientMatch[1];
+    let rawName = clientMatch[1].trim();
+    if (rawName) {
+      result.clientName = rawName;
+    }
   }
 
-  // 3. Discount
-  const discountMatch =
-    text.match(/(\d+(?:\.\d+)?)\s*%\s*discount/i) || text.match(/discount\s*(?:of\s*)?(\d+(?:\.\d+)?)\s*%/i);
+  // 3. Discount & Tax Extraction
+  const discountMatch = text.match(/(\d+(?:\.\d+)?)\s*%\s*discount/i) || text.match(/discount\s*(?:of\s*)?(\d+(?:\.\d+)?)\s*%/i);
   if (discountMatch) {
     result.discount = parseFloat(discountMatch[1]);
   }
 
-  // 4. Tax
   const taxMatch = text.match(/(\d+(?:\.\d+)?)\s*%\s*tax/i) || text.match(/tax\s*(?:of\s*)?(\d+(?:\.\d+)?)\s*%/i);
   if (taxMatch) {
     result.tax = parseFloat(taxMatch[1]);
   }
 
-  // 5. Line Items
+  // 4. Line Items Extraction with Rates & Quantities
   const segments = text.split(/(?:and|,|\.)/gi);
   for (const segment of segments) {
     const trimmed = segment.trim();
@@ -126,9 +129,32 @@ function parseOffline(text) {
           quantity: parseFloat(match[2]),
           rate: parseFloat(match[3])
         });
+        continue;
       }
-      continue;
     }
+  }
+
+  // If no specific rate/qty item was parsed, extract the main service description
+  if (result.items.length === 0) {
+    let serviceDesc = "Professional Service";
+
+    // Clean out command keywords
+    let cleanText = text
+      .replace(/^create\s+(?:a|an)?\s*(?:invoice|estimate|quote)?\s*(?:for)?/gi, "")
+      .replace(/for\s+[A-Za-z0-9\s]+(?:company|ltd|inc|corp)/gi, "")
+      .trim();
+
+    if (cleanText) {
+      serviceDesc = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
+    } else {
+      serviceDesc = "Roller Shutter Service";
+    }
+
+    result.items.push({
+      description: serviceDesc,
+      quantity: 1,
+      rate: 150
+    });
   }
 
   return result;

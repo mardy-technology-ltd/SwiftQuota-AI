@@ -3,6 +3,154 @@
 import { useState, useEffect } from "react";
 import ClientPaymentModal from "@/app/view/[id]/ClientPaymentModal";
 
+const CURRENCY_LIST = [
+  { code: "USD", symbol: "$", name: "US Dollar" },
+  { code: "BDT", symbol: "৳", name: "Bangladeshi Taka" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "GBP", symbol: "£", name: "British Pound" },
+  { code: "AED", symbol: "AED", name: "UAE Dirham" },
+  { code: "SAR", symbol: "SAR", name: "Saudi Riyal" },
+  { code: "INR", symbol: "₹", name: "Indian Rupee" },
+  { code: "CAD", symbol: "CA$", name: "Canadian Dollar" },
+  { code: "AUD", symbol: "A$", name: "Australian Dollar" },
+  { code: "SGD", symbol: "S$", name: "Singapore Dollar" },
+  { code: "MYR", symbol: "RM", name: "Malaysian Ringgit" },
+  { code: "JPY", symbol: "¥", name: "Japanese Yen" },
+  { code: "CHF", symbol: "CHF", name: "Swiss Franc" },
+  { code: "CNY", symbol: "¥", name: "Chinese Yuan" },
+  { code: "NZD", symbol: "NZ$", name: "New Zealand Dollar" },
+  { code: "KWD", symbol: "KWD", name: "Kuwaiti Dinar" },
+  { code: "QAR", symbol: "QAR", name: "Qatari Riyal" },
+  { code: "OMR", symbol: "OMR", name: "Omani Rial" },
+  { code: "PKR", symbol: "₨", name: "Pakistani Rupee" },
+];
+
+function SearchableCurrencySelect({ value, onChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filtered = CURRENCY_LIST.filter(
+    (c) =>
+      c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const selectedCurr = CURRENCY_LIST.find((c) => c.code === value) || {
+    code: value || "USD",
+    symbol: "$",
+    name: "US Dollar",
+  };
+
+  return (
+    <div style={{ position: "relative" }}>
+      {/* TRIGGER BUTTON */}
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          background: "rgba(2, 6, 23, 0.6)",
+          padding: "0.75rem 1rem",
+          borderRadius: "10px",
+          border: "1px solid var(--border)",
+          color: "var(--foreground)",
+          cursor: "pointer",
+          display: "flex",
+          justify: "space-between",
+          alignItems: "center",
+          fontSize: "0.95rem",
+          fontWeight: 600,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <span style={{ color: "var(--primary)", fontWeight: 800 }}>{selectedCurr.symbol}</span>
+          <span>{selectedCurr.code} - {selectedCurr.name}</span>
+        </div>
+        <span style={{ opacity: 0.6, fontSize: "0.75rem" }}>▼</span>
+      </div>
+
+      {/* DROPDOWN MENU */}
+      {isOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 6px)",
+            left: 0,
+            right: 0,
+            background: "#0f172a",
+            border: "1px solid rgba(99, 102, 241, 0.3)",
+            borderRadius: "12px",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+            zIndex: 100,
+            padding: "0.5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.4rem",
+            maxHeight: "260px",
+          }}
+        >
+          {/* SEARCH INPUT */}
+          <input
+            type="text"
+            placeholder="🔍 Search currency (e.g. BDT, USD, Taka...)"
+            autoFocus
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              background: "#1e293b",
+              border: "1px solid #334155",
+              borderRadius: "8px",
+              padding: "0.55rem 0.75rem",
+              color: "#ffffff",
+              fontSize: "0.85rem",
+              outline: "none",
+            }}
+          />
+
+          {/* LIST ITEMS */}
+          <div style={{ overflowY: "auto", flex: 1, display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+            {filtered.length === 0 ? (
+              <div style={{ padding: "0.5rem", fontSize: "0.8rem", color: "#94a3b8", textAlign: "center" }}>
+                No currency found
+              </div>
+            ) : (
+              filtered.map((c) => (
+                <div
+                  key={c.code}
+                  onClick={() => {
+                    onChange(c.code);
+                    setIsOpen(false);
+                    setSearchQuery("");
+                  }}
+                  style={{
+                    padding: "0.5rem 0.75rem",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    background: c.code === value ? "rgba(99, 102, 241, 0.25)" : "transparent",
+                    color: c.code === value ? "#a5b4fc" : "#cbd5e1",
+                    display: "flex",
+                    justify: "space-between",
+                    alignItems: "center",
+                    fontSize: "0.88rem",
+                    fontWeight: c.code === value ? 700 : 500,
+                    transition: "background 0.15s ease",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <span style={{ fontWeight: 800, width: "24px" }}>{c.symbol}</span>
+                    <span>{c.code}</span>
+                    <span style={{ fontSize: "0.78rem", opacity: 0.7 }}>({c.name})</span>
+                  </div>
+                  {c.code === value && <span>✓</span>}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
@@ -400,13 +548,7 @@ export default function SettingsPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Default Currency</label>
-              <input
-                type="text"
-                required
-                style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-              />
+              <SearchableCurrencySelect value={currency} onChange={setCurrency} />
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>

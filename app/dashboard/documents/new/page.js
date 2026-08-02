@@ -10,15 +10,17 @@ export default function FormBuilderPage() {
 
   // Document config
   const [docType, setDocType] = useState("ESTIMATE");
-  const [number, setNumber] = useState(`SQ-${Math.floor(1000 + Math.random() * 9000)}`);
-  const [issuedDate, setIssuedDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-  const [dueDate, setDueDate] = useState(
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .split("T")[0]
-  );
+  const [number, setNumber] = useState("SQ-1001");
+  const [issuedDate, setIssuedDate] = useState("2026-08-03");
+  const [dueDate, setDueDate] = useState("2026-09-02");
+
+  useEffect(() => {
+    setNumber(`SQ-${Math.floor(1000 + Math.random() * 9000)}`);
+    const today = new Date().toISOString().split("T")[0];
+    const due = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    setIssuedDate(today);
+    setDueDate(due);
+  }, []);
 
   // Clients state
   const [clients, setClients] = useState([]);
@@ -50,11 +52,13 @@ export default function FormBuilderPage() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [parsing, setParsing] = useState(false);
   const [aiError, setAiError] = useState("");
+  const [aiSuccessMsg, setAiSuccessMsg] = useState("");
 
   const handleAiParse = async () => {
     if (!aiPrompt.trim()) return;
     setParsing(true);
     setAiError("");
+    setAiSuccessMsg("");
 
     try {
       const res = await fetch("/api/ai/parse", {
@@ -67,29 +71,30 @@ export default function FormBuilderPage() {
       if (json.success && json.data) {
         const parsed = json.data;
 
-        // 1. Match client
+        // 1. Match or Create client
         if (parsed.clientName) {
           const matched = clients.find(
-            (c) => c.name.toLowerCase().includes(parsed.clientName.toLowerCase())
+            (c) => c.name.toLowerCase().includes(parsed.clientName.toLowerCase()) ||
+                   parsed.clientName.toLowerCase().includes(c.name.toLowerCase())
           );
           if (matched) {
             setSelectedClientId(matched.id);
           } else {
-            console.log(`Parsed client name "${parsed.clientName}" not matched.`);
+            console.log(`Parsed client name "${parsed.clientName}" not in client list.`);
           }
         }
 
-        // 2. Document Type
-        if (parsed.documentType) {
+        // 2. Document Type (Only switch if explicitly specified in user prompt)
+        if (parsed.documentType && /invoice|estimate|quote/i.test(aiPrompt)) {
           setDocType(parsed.documentType.toUpperCase());
         }
 
         // 3. Populate Items
         if (parsed.items && parsed.items.length > 0) {
           setItems(parsed.items.map(item => ({
-            description: item.description || "",
+            description: item.description || "Service Item",
             quantity: item.quantity || 1,
-            rate: item.rate || 0
+            rate: item.rate || 100
           })));
         }
 
@@ -100,6 +105,9 @@ export default function FormBuilderPage() {
         if (typeof parsed.discount === "number") {
           setDiscount(parsed.discount);
         }
+
+        setAiSuccessMsg(`✓ AI Quick Fill Applied! Selected ${parsed.documentType || 'INVOICE'} with ${parsed.items?.length || 1} line item(s).`);
+        setTimeout(() => setAiSuccessMsg(""), 6000);
         
         // Clear prompt
         setAiPrompt("");
@@ -261,6 +269,11 @@ export default function FormBuilderPage() {
               🪄 AI Quick Fill
             </div>
             {aiError && <div className={styles.errorBanner}>{aiError}</div>}
+            {aiSuccessMsg && (
+              <div style={{ background: "#dcfce7", color: "#166534", border: "1px solid #86efac", padding: "0.6rem 0.85rem", borderRadius: "8px", fontSize: "0.85rem", fontWeight: 700, margin: "0.5rem 0" }}>
+                {aiSuccessMsg}
+              </div>
+            )}
             <textarea
               className={styles.aiTextArea}
               placeholder="Describe your invoice/estimate in plain English (e.g., 'Create an estimate for Liton. Add Web Development for 10 hours at $50/hr and UI Design for 5 hours at $60/hr. Apply 10% discount.')"
