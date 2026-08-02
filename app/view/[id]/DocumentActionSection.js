@@ -75,11 +75,14 @@ export default function DocumentActionSection({
         >
           <div>
             <div style={{ fontSize: "1.2rem", fontWeight: 800, letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              💳 Pay Invoice Securely Online
+              💳 Pay Invoice Online (Upfront or Upon Completion)
             </div>
             <div style={{ fontSize: "0.88rem", opacity: 0.9, marginTop: "0.3rem", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ background: "rgba(34, 197, 94, 0.3)", color: "#86efac", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+                ⚡ Flexible: Pay Now or Post-Completion
+              </span>
               <span>Accepted:</span>
-              <span style={{ background: "rgba(255, 255, 255, 0.15)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Credit/Debit Card</span>
+              <span style={{ background: "rgba(255, 255, 255, 0.15)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Card / Gateway</span>
               <span style={{ background: "rgba(236, 72, 153, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
                 bKash {merchantPaymentInfo?.bkashNumber ? `(${merchantPaymentInfo.bkashNumber})` : ""}
               </span>

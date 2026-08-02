@@ -326,7 +326,7 @@ export default function FormBuilderPage() {
             </div>
 
             <div className={styles.field} style={{ marginTop: "1rem" }}>
-              <label className={styles.label}>Due Date</label>
+              <label className={styles.label}>Due Date & Payment Schedule Terms</label>
               <input
                 type="date"
                 required
@@ -334,6 +334,29 @@ export default function FormBuilderPage() {
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
               />
+              <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.45rem", flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  onClick={() => setDueDate(new Date().toISOString().split("T")[0])}
+                  style={{ background: "rgba(99, 102, 241, 0.15)", color: "#a5b4fc", border: "1px solid rgba(99, 102, 241, 0.3)", padding: "0.25rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 600, cursor: "pointer" }}
+                >
+                  ⚡ Due Today (Pay Now)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDueDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0])}
+                  style={{ background: "rgba(34, 197, 94, 0.15)", color: "#86efac", border: "1px solid rgba(34, 197, 94, 0.3)", padding: "0.25rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 600, cursor: "pointer" }}
+                >
+                  🤝 Upon Project Completion (Net 14)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDueDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0])}
+                  style={{ background: "rgba(148, 163, 184, 0.15)", color: "#cbd5e1", border: "1px solid rgba(148, 163, 184, 0.3)", padding: "0.25rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 600, cursor: "pointer" }}
+                >
+                  📅 Net 30 Days
+                </button>
+              </div>
             </div>
           </div>
 
