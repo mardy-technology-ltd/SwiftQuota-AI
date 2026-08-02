@@ -422,39 +422,42 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* INTERACTIVE MERCHANT PAYMENT CONFIGURATION CARD (IMAGE 3 BRAND AESTHETICS) */}
+          {/* INTERACTIVE MERCHANT PAYMENT CONFIGURATION CARD (EXACT IMAGE 2 AESTHETICS) */}
           <div
             style={{
-              background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f172a 100%)",
-              borderRadius: "18px",
-              padding: "1.5rem",
+              background: "#0f172a",
+              borderRadius: "22px",
+              padding: "1.75rem",
               border: "1px solid rgba(99, 102, 241, 0.3)",
-              boxShadow: "0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.15)",
+              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15)",
               display: "flex",
               flexDirection: "column",
-              gap: "1.2rem",
+              gap: "1.25rem",
               marginTop: "0.5rem",
+              color: "#f8fafc",
             }}
           >
-            <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 800, color: "#ffffff", margin: 0, display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                💳 Client Payment Methods & Gateway Configuration
-              </h3>
-              <p style={{ fontSize: "0.8rem", color: "#94a3b8", margin: "0.25rem 0 0 0" }}>
-                Configure your bKash, Nagad, Bank Wire, or Stripe link. Your clients will see these channels on your invoices.
-              </p>
+            {/* Header matching Image 2 */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#ffffff", margin: 0, letterSpacing: "-0.01em" }}>
+                  Configure Client Checkout
+                </h3>
+                <p style={{ fontSize: "0.85rem", color: "#94a3b8", margin: "0.25rem 0 0 0" }}>
+                  Total Payable Preview: <span style={{ color: "#34d399", fontWeight: 800 }}>USD 1,500.00</span>
+                </p>
+              </div>
             </div>
 
-            {/* PAYMENT TABS (IMAGE 3 STYLE) */}
+            {/* PAYMENT TABS (EXACT MATCHING IMAGE 2 TABS) */}
             <div
               style={{
                 display: "flex",
                 background: "#1e293b",
                 padding: "0.35rem",
-                borderRadius: "12px",
+                borderRadius: "14px",
                 gap: "0.3rem",
                 border: "1px solid rgba(255, 255, 255, 0.08)",
-                overflowX: "auto",
               }}
             >
               <button
@@ -465,16 +468,36 @@ export default function SettingsPage() {
                   background: activePaymentTab === "card" ? "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)" : "transparent",
                   color: activePaymentTab === "card" ? "#ffffff" : "#94a3b8",
                   border: "none",
-                  padding: "0.6rem 0.65rem",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
+                  padding: "0.65rem 0.5rem",
+                  borderRadius: "10px",
+                  fontSize: "0.85rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s ease",
+                  boxShadow: activePaymentTab === "card" ? "0 4px 14px rgba(99, 102, 241, 0.35)" : "none",
+                }}
+              >
+                💳 Card
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("bank")}
+                style={{
+                  flex: 1,
+                  background: activePaymentTab === "bank" ? "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)" : "transparent",
+                  color: activePaymentTab === "bank" ? "#ffffff" : "#94a3b8",
+                  border: "none",
+                  padding: "0.65rem 0.5rem",
+                  borderRadius: "10px",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                   transition: "all 0.2s ease",
                 }}
               >
-                💳 Card / Stripe
+                🏦 Bank Transfer
               </button>
               <button
                 type="button"
@@ -484,9 +507,9 @@ export default function SettingsPage() {
                   background: activePaymentTab === "bkash" ? "#ec4899" : "transparent",
                   color: activePaymentTab === "bkash" ? "#ffffff" : "#94a3b8",
                   border: "none",
-                  padding: "0.6rem 0.65rem",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
+                  padding: "0.65rem 0.5rem",
+                  borderRadius: "10px",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
@@ -503,9 +526,9 @@ export default function SettingsPage() {
                   background: activePaymentTab === "nagad" ? "#f97316" : "transparent",
                   color: activePaymentTab === "nagad" ? "#ffffff" : "#94a3b8",
                   border: "none",
-                  padding: "0.6rem 0.65rem",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
+                  padding: "0.65rem 0.5rem",
+                  borderRadius: "10px",
+                  fontSize: "0.85rem",
                   fontWeight: 700,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
@@ -514,177 +537,185 @@ export default function SettingsPage() {
               >
                 🟠 Nagad
               </button>
-              <button
-                type="button"
-                onClick={() => setActivePaymentTab("bank")}
-                style={{
-                  flex: 1,
-                  background: activePaymentTab === "bank" ? "#3b82f6" : "transparent",
-                  color: activePaymentTab === "bank" ? "#ffffff" : "#94a3b8",
-                  border: "none",
-                  padding: "0.6rem 0.65rem",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                🏦 Bank Wire
-              </button>
-              <button
-                type="button"
-                onClick={() => setActivePaymentTab("notes")}
-                style={{
-                  flex: 1,
-                  background: activePaymentTab === "notes" ? "#10b981" : "transparent",
-                  color: activePaymentTab === "notes" ? "#ffffff" : "#94a3b8",
-                  border: "none",
-                  padding: "0.6rem 0.65rem",
-                  borderRadius: "8px",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                📄 Instructions
-              </button>
             </div>
 
-            {/* TAB CONTENTS */}
+            {/* TAB CONTENTS (MATCHING IMAGE 2 EXACT FORM LAYOUT) */}
             {activePaymentTab === "card" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#a1a1aa" }}>
-                    Online Card / Gateway Payment Link (Stripe / SSLCommerz URL)
-                  </label>
-                  <div style={{ display: "flex", gap: "0.3rem" }}>
-                    <span style={{ background: "#1a1f71", color: "#fff", fontSize: "0.6rem", fontWeight: 900, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>VISA</span>
-                    <span style={{ background: "#eb001b", color: "#fff", fontSize: "0.6rem", fontWeight: 900, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>MC</span>
-                    <span style={{ background: "#0077a2", color: "#fff", fontSize: "0.6rem", fontWeight: 800, padding: "0.15rem 0.35rem", borderRadius: "4px" }}>AMEX</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#f1f5f9" }}>Credit card details</div>
+
+                {/* Card Number Input with embedded Card Brand Logos */}
+                <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="0000 0000 0000 0000"
+                    style={{
+                      width: "100%",
+                      background: "#1e293b",
+                      border: "1px solid #334155",
+                      borderRadius: "12px",
+                      padding: "0.8rem 7.5rem 0.8rem 1rem",
+                      color: "#ffffff",
+                      fontSize: "0.92rem",
+                      letterSpacing: "1px",
+                      fontFamily: "monospace",
+                      outline: "none",
+                    }}
+                  />
+                  <div style={{ position: "absolute", right: "0.75rem", display: "flex", alignItems: "center", gap: "0.25rem", pointerEvents: "none" }}>
+                    <span style={{ background: "#1a1f71", color: "#ffffff", fontSize: "0.65rem", fontWeight: 900, padding: "0.2rem 0.4rem", borderRadius: "4px", fontStyle: "italic" }}>VISA</span>
+                    <span style={{ width: "22px", height: "14px", background: "radial-gradient(circle at 35% 50%, #eb001b 0%, #eb001b 60%, transparent 61%), radial-gradient(circle at 65% 50%, #f79e1b 0%, #f79e1b 60%, transparent 61%)", borderRadius: "3px" }}></span>
+                    <span style={{ background: "#0077a2", color: "#ffffff", fontSize: "0.6rem", fontWeight: 800, padding: "0.2rem 0.35rem", borderRadius: "4px" }}>AMEX</span>
+                    <span style={{ background: "#334155", color: "#94a3b8", fontSize: "0.6rem", fontWeight: 700, padding: "0.2rem 0.35rem", borderRadius: "4px" }}>DISCOVER</span>
                   </div>
                 </div>
-                <input
-                  type="text"
-                  placeholder="https://buy.stripe.com/example or https://pay.yourdomain.com"
-                  style={{
-                    background: "#1e293b",
-                    padding: "0.8rem 1rem",
-                    borderRadius: "10px",
-                    border: "1px solid #334155",
-                    color: "#ffffff",
-                    fontSize: "0.9rem",
-                    outline: "none",
-                  }}
-                  value={paymentLink}
-                  onChange={(e) => setPaymentLink(e.target.value)}
-                />
-                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
-                  Clients clicking "Pay via Card" on your invoices will be directed to this link to complete their transaction securely.
-                </p>
-              </div>
-            )}
 
-            {activePaymentTab === "bkash" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#f472b6" }}>
-                  bKash Number (Merchant / Personal)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 01712345678"
-                  style={{
-                    background: "#1e293b",
-                    padding: "0.8rem 1rem",
-                    borderRadius: "10px",
-                    border: "1px solid #334155",
-                    color: "#ffffff",
-                    fontSize: "0.9rem",
-                    outline: "none",
-                  }}
-                  value={bkashNumber}
-                  onChange={(e) => setBkashNumber(e.target.value)}
-                />
-                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
-                  Clients will see this bKash number on invoice checkouts with a 1-click Copy button to transfer funds.
-                </p>
-              </div>
-            )}
+                {/* Expiry & CVC Grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+                  <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                    <input
+                      type="text"
+                      disabled
+                      placeholder="MM / YYYY"
+                      style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                    />
+                    <span style={{ position: "absolute", right: "1rem", fontSize: "0.95rem", opacity: 0.7 }}>📅</span>
+                  </div>
 
-            {activePaymentTab === "nagad" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#fb923c" }}>
-                  Nagad Number (Personal / Merchant)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 01812345678"
-                  style={{
-                    background: "#1e293b",
-                    padding: "0.8rem 1rem",
-                    borderRadius: "10px",
-                    border: "1px solid #334155",
-                    color: "#ffffff",
-                    fontSize: "0.9rem",
-                    outline: "none",
-                  }}
-                  value={nagadNumber}
-                  onChange={(e) => setNagadNumber(e.target.value)}
-                />
-                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
-                  Clients will see this Nagad number on invoice checkouts with a 1-click Copy button.
+                  <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                    <input
+                      type="password"
+                      disabled
+                      placeholder="CVC"
+                      style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                    />
+                    <span style={{ position: "absolute", right: "1rem", fontSize: "0.95rem", opacity: 0.7 }}>🛡️</span>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", lineHeight: 1.45, margin: "0.25rem 0 0 0" }}>
+                  By providing your card information, you allow us to charge your card for future payments in accordance with their terms.
                 </p>
+
+                {/* Billing Address Section */}
+                <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#f1f5f9", marginTop: "0.4rem" }}>Billing address</div>
+
+                <div>
+                  <select
+                    style={{
+                      width: "100%",
+                      background: "#1e293b",
+                      border: "1px solid #334155",
+                      borderRadius: "12px",
+                      padding: "0.8rem 1rem",
+                      color: "#ffffff",
+                      fontSize: "0.9rem",
+                      outline: "none",
+                      appearance: "none",
+                      backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")",
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "right 1rem center",
+                      backgroundSize: "1rem",
+                    }}
+                  >
+                    <option value="Bangladesh">Bangladesh BD</option>
+                    <option value="United States">United States US</option>
+                    <option value="United Kingdom">United Kingdom UK</option>
+                    <option value="Canada">Canada CA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="Postal code"
+                    style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                  />
+                </div>
+
+                {/* Merchant Online Gateway Link Field */}
+                <div style={{ marginTop: "0.6rem" }}>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "#34d399", display: "block", marginBottom: "0.3rem" }}>
+                    Online Gateway Payment Link (Stripe / SSLCommerz URL)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://buy.stripe.com/example or https://pay.yourdomain.com"
+                    style={{ width: "100%", background: "#1e293b", border: "1px solid #6366f1", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                    value={paymentLink}
+                    onChange={(e) => setPaymentLink(e.target.value)}
+                  />
+                </div>
               </div>
             )}
 
             {activePaymentTab === "bank" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#60a5fa" }}>
-                  Bank Transfer / Wire Account Details
-                </label>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#60a5fa" }}>Bank Wire Transfer Account Details</div>
                 <textarea
                   style={{
+                    width: "100%",
                     background: "#1e293b",
-                    padding: "0.8rem 1rem",
-                    borderRadius: "10px",
                     border: "1px solid #334155",
+                    borderRadius: "12px",
+                    padding: "0.8rem 1rem",
                     color: "#ffffff",
                     fontSize: "0.9rem",
                     outline: "none",
-                    minHeight: "80px",
+                    minHeight: "90px",
                     fontFamily: "inherit",
                   }}
                   value={bankDetails}
                   placeholder="Bank: City Bank PLC&#10;Account Name: Apex Creative&#10;Account #: 123456789&#10;Branch: Gulshan&#10;Routing: 11026"
                   onChange={(e) => setBankDetails(e.target.value)}
                 />
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients selecting Bank Transfer will see these account instructions to remit their payment.
+                </p>
               </div>
             )}
 
-            {activePaymentTab === "notes" && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#34d399" }}>
-                  Invoice Payment Instructions & Terms
-                </label>
-                <textarea
-                  style={{
-                    background: "#1e293b",
-                    padding: "0.8rem 1rem",
-                    borderRadius: "10px",
-                    border: "1px solid #334155",
-                    color: "#ffffff",
-                    fontSize: "0.9rem",
-                    outline: "none",
-                    minHeight: "80px",
-                    fontFamily: "inherit",
-                  }}
-                  value={paymentDetails}
-                  placeholder="e.g. Please remit payment within 14 days of invoice date. Thank you for your business!"
-                  onChange={(e) => setPaymentDetails(e.target.value)}
-                />
+            {activePaymentTab === "bkash" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#f472b6" }}>bKash Account Settings (Merchant / Personal)</div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: "0.38rem" }}>
+                    bKash Number
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 01712345678"
+                    style={{ width: "100%", background: "#1e293b", border: "1px solid #ec4899", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                    value={bkashNumber}
+                    onChange={(e) => setBkashNumber(e.target.value)}
+                  />
+                </div>
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients paying via bKash will be shown this number with a 1-click Copy button to transfer funds.
+                </p>
+              </div>
+            )}
+
+            {activePaymentTab === "nagad" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "#fb923c" }}>Nagad Account Settings (Personal / Merchant)</div>
+                <div>
+                  <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "#a1a1aa", display: "block", marginBottom: "0.38rem" }}>
+                    Nagad Number
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 01812345678"
+                    style={{ width: "100%", background: "#1e293b", border: "1px solid #f97316", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
+                    value={nagadNumber}
+                    onChange={(e) => setNagadNumber(e.target.value)}
+                  />
+                </div>
+                <p style={{ fontSize: "0.75rem", color: "#94a3b8", margin: 0 }}>
+                  Clients paying via Nagad will be shown this number with a 1-click Copy button.
+                </p>
               </div>
             )}
           </div>
