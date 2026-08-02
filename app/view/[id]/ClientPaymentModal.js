@@ -247,6 +247,7 @@ export default function ClientPaymentModal({
               <input
                 type="text"
                 required
+                autoComplete="off"
                 placeholder="0000 0000 0000 0000"
                 value={cardNumber}
                 onChange={handleCardNumberChange}
@@ -266,6 +267,7 @@ export default function ClientPaymentModal({
                 <input
                   type="text"
                   required
+                  autoComplete="off"
                   placeholder="MM / YYYY"
                   value={cardExpiry}
                   onChange={handleExpiryChange}
@@ -278,6 +280,7 @@ export default function ClientPaymentModal({
                 <input
                   type="password"
                   required
+                  autoComplete="off"
                   maxLength={4}
                   placeholder="CVC"
                   value={cardCvc}
