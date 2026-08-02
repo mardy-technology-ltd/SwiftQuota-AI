@@ -26,6 +26,10 @@ export async function GET() {
         currency: user.currency || 'USD',
         taxRate: user.taxRate || 0,
         paymentDetails: user.paymentDetails || '',
+        bkashNumber: user.bkashNumber || '',
+        nagadNumber: user.nagadNumber || '',
+        bankDetails: user.bankDetails || '',
+        paymentLink: user.paymentLink || '',
         logoUrl: user.logoUrl || '',
         stampUrl: user.stampUrl || '',
         taxId: user.taxId || '',
@@ -40,7 +44,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { email, businessName, phone, address, currency, taxRate, paymentDetails, logoUrl, stampUrl, taxId } = await request.json();
+    const { email, businessName, phone, address, currency, taxRate, paymentDetails, bkashNumber, nagadNumber, bankDetails, paymentLink, logoUrl, stampUrl, taxId } = await request.json();
 
     let user = await prisma.user.findFirst();
     if (!user) {
@@ -81,6 +85,10 @@ export async function POST(request) {
         currency: currency !== undefined ? currency : user.currency,
         taxRate: taxRate !== undefined ? parseFloat(taxRate) : user.taxRate,
         paymentDetails: paymentDetails !== undefined ? paymentDetails : user.paymentDetails,
+        bkashNumber: bkashNumber !== undefined ? bkashNumber : user.bkashNumber,
+        nagadNumber: nagadNumber !== undefined ? nagadNumber : user.nagadNumber,
+        bankDetails: bankDetails !== undefined ? bankDetails : user.bankDetails,
+        paymentLink: paymentLink !== undefined ? paymentLink : user.paymentLink,
         logoUrl: logoUrl !== undefined ? logoUrl : user.logoUrl,
         stampUrl: stampUrl !== undefined ? stampUrl : user.stampUrl,
         taxId: taxId !== undefined ? taxId : user.taxId,

@@ -13,6 +13,10 @@ export default function SettingsPage() {
   const [currency, setCurrency] = useState("USD");
   const [taxRate, setTaxRate] = useState(0);
   const [paymentDetails, setPaymentDetails] = useState("");
+  const [bkashNumber, setBkashNumber] = useState("");
+  const [nagadNumber, setNagadNumber] = useState("");
+  const [bankDetails, setBankDetails] = useState("");
+  const [paymentLink, setPaymentLink] = useState("");
   const [isLocked, setIsLocked] = useState(false);
 
   const [uploadingLogo, setUploadingLogo] = useState(false);
@@ -39,6 +43,10 @@ export default function SettingsPage() {
           setCurrency(profile.currency || "USD");
           setTaxRate(profile.taxRate || 0);
           setPaymentDetails(profile.paymentDetails || "");
+          setBkashNumber(profile.bkashNumber || "");
+          setNagadNumber(profile.nagadNumber || "");
+          setBankDetails(profile.bankDetails || "");
+          setPaymentLink(profile.paymentLink || "");
           setIsLocked(!!profile.isLocked);
         }
       } catch (err) {
@@ -109,6 +117,10 @@ export default function SettingsPage() {
           currency,
           taxRate: parseFloat(taxRate) || 0,
           paymentDetails,
+          bkashNumber,
+          nagadNumber,
+          bankDetails,
+          paymentLink,
         }),
       });
 
@@ -418,13 +430,67 @@ export default function SettingsPage() {
                 border: "1px solid var(--border)",
                 color: "var(--foreground)",
                 outline: "none",
-                minHeight: "80px",
+                minHeight: "70px",
                 resize: "vertical",
                 fontFamily: "inherit",
               }}
               value={paymentDetails}
-              placeholder="e.g. Please remit payment via Bank Transfer to Acct 1234-5678 or Stripe Link: stripe.com/pay/abc"
+              placeholder="e.g. Please remit payment within 14 days of invoice date."
               onChange={(e) => setPaymentDetails(e.target.value)}
+            />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#ec4899" }}>bKash Number (Merchant/Personal)</label>
+              <input
+                type="text"
+                placeholder="e.g. 01712345678"
+                style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
+                value={bkashNumber}
+                onChange={(e) => setBkashNumber(e.target.value)}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#f97316" }}>Nagad Number</label>
+              <input
+                type="text"
+                placeholder="e.g. 01812345678"
+                style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
+                value={nagadNumber}
+                onChange={(e) => setNagadNumber(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#3b82f6" }}>Bank Transfer Account Details</label>
+            <textarea
+              style={{
+                background: "rgba(2, 6, 23, 0.6)",
+                padding: "0.75rem 1rem",
+                borderRadius: "10px",
+                border: "1px solid var(--border)",
+                color: "var(--foreground)",
+                outline: "none",
+                minHeight: "70px",
+                resize: "vertical",
+                fontFamily: "inherit",
+              }}
+              value={bankDetails}
+              placeholder="Bank: City Bank PLC | Account Name: Apex Creative | Account #: 123456789 | Branch: Gulshan | Routing: 11026"
+              onChange={(e) => setBankDetails(e.target.value)}
+            />
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+            <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "#10b981" }}>Online Card / Gateway Payment Link (Stripe/SSLCommerz URL)</label>
+            <input
+              type="text"
+              placeholder="https://buy.stripe.com/example or https://pay.yourdomain.com"
+              style={{ background: "rgba(2, 6, 23, 0.6)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border)", color: "var(--foreground)", outline: "none" }}
+              value={paymentLink}
+              onChange={(e) => setPaymentLink(e.target.value)}
             />
           </div>
 

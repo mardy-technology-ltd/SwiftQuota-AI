@@ -20,6 +20,10 @@ model User {
   currency       String           @default("USD")
   taxRate        Float            @default(0.0)
   paymentDetails String?
+  bkashNumber    String?
+  nagadNumber    String?
+  bankDetails    String?
+  paymentLink    String?
   clients        Client[]
   documents      InvoiceOrQuote[]
   createdAt      DateTime         @default(now())
@@ -38,21 +42,26 @@ model Client {
 }
 
 model InvoiceOrQuote {
-  id            String    @id @default(uuid())
-  number        String
-  type          String
-  status        String
-  issuedDate    DateTime  @default(now())
-  dueDate       DateTime
-  items         String
-  taxRate       Float     @default(0.0)
-  discount      Float     @default(0.0)
-  totalAmount   Float
-  signaturePath String?
-  signedAt      DateTime?
-  clientId      String
-  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  userId        String
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now())
+  id              String    @id @default(uuid())
+  number          String
+  type            String
+  status          String
+  issuedDate      DateTime  @default(now())
+  dueDate         DateTime
+  items           String
+  taxRate         Float     @default(0.0)
+  discount        Float     @default(0.0)
+  totalAmount     Float
+  paidAmount      Float     @default(0.0)
+  paymentMethod   String?
+  trxId           String?
+  rejectionReason String?
+  rejectedAt      DateTime?
+  signaturePath   String?
+  signedAt        DateTime?
+  clientId        String
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
 }

@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ClientPaymentModal from "./view/[id]/ClientPaymentModal";
 import styles from "./page.module.css";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("web-design");
   const [openFaq, setOpenFaq] = useState(null);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   const mockPrompts = {
     "web-design": {
@@ -284,7 +286,12 @@ export default function Home() {
                   <span className={styles.checkIcon}>✓</span> PDF & Web Link Export
                 </li>
               </ul>
-              <button className={`${styles.planCta} ${styles.planCtaStandard}`}>Start 14-Day Free Trial</button>
+              <button
+                onClick={() => setShowCheckoutModal(true)}
+                className={`${styles.planCta} ${styles.planCtaStandard}`}
+              >
+                Start 14-Day Free Trial
+              </button>
             </div>
 
             {/* Card 2: $39 Lifetime Deal */}
@@ -313,10 +320,25 @@ export default function Home() {
                   <span className={styles.checkIcon}>✓</span> Lifetime Product Updates
                 </li>
               </ul>
-              <button className={`${styles.planCta} ${styles.planCtaFeatured}`}>Get Lifetime Access — $39</button>
+              <button
+                onClick={() => setShowCheckoutModal(true)}
+                className={`${styles.planCta} ${styles.planCtaFeatured}`}
+              >
+                Get Lifetime Access — $39
+              </button>
             </div>
           </div>
         </section>
+
+        {/* SUBSCRIPTION CHECKOUT MODAL */}
+        {showCheckoutModal && (
+          <ClientPaymentModal
+            totalAmount={120}
+            currency="USD"
+            showPlanSelection={true}
+            onClose={() => setShowCheckoutModal(false)}
+          />
+        )}
 
         {/* FAQ Section */}
         <section id="faqs" className={styles.faq}>

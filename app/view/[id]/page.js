@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import PrintBar from "./PrintBar";
-import ClientSignatureSection from "./ClientSignatureSection";
+import DocumentActionSection from "./DocumentActionSection";
 import styles from "./view.module.css";
 
 export const dynamic = "force-dynamic";
@@ -197,13 +197,21 @@ export default async function PublicDocumentView({ params }) {
           </div>
         )}
 
-        {/* Signature & Approval Section */}
-        <ClientSignatureSection
+        {/* Interactive Client Portal Actions (Signature, Revision, Payment Gateway) */}
+        <DocumentActionSection
           documentId={doc.id}
-          initialStatus={doc.status}
+          docType={doc.type}
+          status={doc.status}
+          totalAmount={doc.totalAmount}
+          currency={doc.user?.currency || "USD"}
+          paidAmount={doc.paidAmount}
+          paymentMethod={doc.paymentMethod}
+          trxId={doc.trxId}
           signaturePath={doc.signaturePath}
           signedAt={doc.signedAt}
+          rejectionReason={doc.rejectionReason}
           clientName={doc.client?.name}
+          merchantUser={doc.user}
         />
       </div>
     </div>
