@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import PrintButton from "./PrintButton";
+import PrintBar from "./PrintBar";
 import ClientSignatureSection from "./ClientSignatureSection";
 import styles from "./view.module.css";
 
@@ -58,15 +58,10 @@ export default async function PublicDocumentView({ params }) {
   return (
     <div className={styles.pageBg}>
       {/* Top Action Bar (hidden in print) */}
-      <div className={styles.actionBar}>
-        <div style={{ fontSize: "0.9rem", color: "#94a3b8", fontWeight: 600 }}>
-          Client Portal View — {doc.type} #{doc.number}
-        </div>
-        <PrintButton />
-      </div>
+      <PrintBar docNumber={doc.number} docType={doc.type} />
 
       {/* Main Document Paper Container */}
-      <div className={styles.documentPaper}>
+      <div className={styles.documentPaper} id="document-paper-container">
         {/* Floating Status Badge */}
         <div
           className={`${styles.statusBadgeFloating} ${
@@ -76,18 +71,33 @@ export default async function PublicDocumentView({ params }) {
           ● {doc.status}
         </div>
 
-        {/* Document Header */}
+        {/* Document Official Letterhead Header */}
         <div className={styles.docHeader}>
           <div>
-            <div className={styles.businessLogo}>
-              ⚡ {doc.user?.businessName || "Apex Creative Agency"}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.4rem" }}>
+              {doc.user?.logoUrl && (
+                <img src={doc.user.logoUrl} alt="Company Logo" className={styles.companyLogoImg} style={{ marginBottom: 0 }} />
+              )}
+              <div className={styles.businessLogo}>
+                {doc.user?.businessName || "Apex Creative Agency"}
+              </div>
             </div>
+            {doc.user?.taxId && (
+              <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#64748b", marginTop: "0.15rem" }}>
+                TAX / REG ID: {doc.user.taxId}
+              </div>
+            )}
             <div style={{ fontSize: "0.85rem", color: "#64748b", marginTop: "0.25rem" }}>
               {doc.user?.address || "789 Enterprise Way, Suite 400, Austin, TX"}
             </div>
             <div style={{ fontSize: "0.85rem", color: "#64748b" }}>
               {doc.user?.email || "admin@swiftquote.ai"}
             </div>
+            {doc.user?.phone && (
+              <div style={{ fontSize: "0.85rem", color: "#64748b" }}>
+                Phone: {doc.user.phone}
+              </div>
+            )}
           </div>
 
           <div className={styles.metaBlock}>
@@ -174,6 +184,18 @@ export default async function PublicDocumentView({ params }) {
             Grand Total: ${doc.totalAmount.toFixed(2)}
           </div>
         </div>
+
+        {/* Official Stamp & Signatory Block if available */}
+        {doc.user?.stampUrl && (
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "1rem" }}>
+            <div style={{ textAlign: "center" }}>
+              <img src={doc.user.stampUrl} alt="Official Seal" className={styles.companyStampImg} />
+              <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#64748b", marginTop: "0.2rem" }}>
+                Official Stamp / Seal
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Signature & Approval Section */}
         <ClientSignatureSection

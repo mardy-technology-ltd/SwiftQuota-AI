@@ -26,6 +26,9 @@ export async function GET() {
         currency: user.currency || 'USD',
         taxRate: user.taxRate || 0,
         paymentDetails: user.paymentDetails || '',
+        logoUrl: user.logoUrl || '',
+        stampUrl: user.stampUrl || '',
+        taxId: user.taxId || '',
         isLocked,
       }
     });
@@ -37,7 +40,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { email, businessName, phone, address, currency, taxRate, paymentDetails } = await request.json();
+    const { email, businessName, phone, address, currency, taxRate, paymentDetails, logoUrl, stampUrl, taxId } = await request.json();
 
     let user = await prisma.user.findFirst();
     if (!user) {
@@ -78,6 +81,9 @@ export async function POST(request) {
         currency: currency !== undefined ? currency : user.currency,
         taxRate: taxRate !== undefined ? parseFloat(taxRate) : user.taxRate,
         paymentDetails: paymentDetails !== undefined ? paymentDetails : user.paymentDetails,
+        logoUrl: logoUrl !== undefined ? logoUrl : user.logoUrl,
+        stampUrl: stampUrl !== undefined ? stampUrl : user.stampUrl,
+        taxId: taxId !== undefined ? taxId : user.taxId,
       }
     });
 
