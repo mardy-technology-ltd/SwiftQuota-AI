@@ -127,6 +127,7 @@ export default function DocumentActionSection({
           totalAmount={totalAmount}
           currency={currency}
           merchantPaymentInfo={merchantPaymentInfo}
+          showPlanSelection={false}
           onClose={() => setShowPaymentModal(false)}
         />
       )}
