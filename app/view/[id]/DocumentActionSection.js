@@ -59,37 +59,37 @@ export default function DocumentActionSection({
       {isInvoice && !isPaid && !isPendingVerification && (
         <div
           style={{
-            background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 50%, #1e1b4b 100%)",
-            color: "#fff",
-            padding: "1.75rem",
+            background: "linear-gradient(135deg, #f8fafc 0%, #eef2ff 60%, #f0fdf4 100%)",
+            color: "#0f172a",
+            padding: "1.5rem 1.75rem",
             borderRadius: "16px",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "1.5rem",
-            boxShadow: "0 15px 35px rgba(79, 70, 229, 0.35)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
+            boxShadow: "0 8px 25px rgba(99, 102, 241, 0.12)",
+            border: "1.5px solid #c7d2fe",
             position: "relative",
             overflow: "hidden",
           }}
         >
           <div>
-            <div style={{ fontSize: "1.2rem", fontWeight: 800, letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "#1e1b4b", letterSpacing: "-0.01em", display: "flex", alignItems: "center", gap: "0.5rem" }}>
               💳 Pay Invoice Online (Upfront or Upon Completion)
             </div>
-            <div style={{ fontSize: "0.88rem", opacity: 0.9, marginTop: "0.3rem", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
-              <span style={{ background: "rgba(34, 197, 94, 0.3)", color: "#86efac", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+            <div style={{ fontSize: "0.85rem", color: "#475569", marginTop: "0.4rem", display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ background: "#dcfce7", color: "#15803d", padding: "0.15rem 0.55rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
                 ⚡ Flexible: Pay Now or Post-Completion
               </span>
               <span>Accepted:</span>
-              <span style={{ background: "rgba(255, 255, 255, 0.15)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Card / Gateway</span>
-              <span style={{ background: "rgba(236, 72, 153, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+              <span style={{ background: "#e0e7ff", color: "#3730a3", padding: "0.15rem 0.55rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Card / Gateway</span>
+              <span style={{ background: "#fce7f3", color: "#be185d", padding: "0.15rem 0.55rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
                 bKash {merchantPaymentInfo?.bkashNumber ? `(${merchantPaymentInfo.bkashNumber})` : ""}
               </span>
-              <span style={{ background: "rgba(249, 115, 22, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
+              <span style={{ background: "#ffedd5", color: "#c2410c", padding: "0.15rem 0.55rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>
                 Nagad {merchantPaymentInfo?.nagadNumber ? `(${merchantPaymentInfo.nagadNumber})` : ""}
               </span>
-              <span style={{ background: "rgba(59, 130, 246, 0.3)", padding: "0.15rem 0.5rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Bank Wire</span>
+              <span style={{ background: "#dbeafe", color: "#1d4ed8", padding: "0.15rem 0.55rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: 700 }}>Bank Wire</span>
             </div>
           </div>
 
@@ -99,13 +99,13 @@ export default function DocumentActionSection({
             style={{
               padding: "0.85rem 1.6rem",
               borderRadius: "12px",
-              background: "#ffffff",
-              color: "#3730a3",
+              background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)",
+              color: "#ffffff",
               fontWeight: 800,
-              fontSize: "1rem",
+              fontSize: "0.98rem",
               border: "none",
               cursor: "pointer",
-              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.25)",
+              boxShadow: "0 6px 18px rgba(79, 70, 229, 0.3)",
               transition: "all 0.2s ease",
               whiteSpace: "nowrap",
             }}

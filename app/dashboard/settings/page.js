@@ -939,59 +939,59 @@ export default function SettingsPage() {
                 <div style={{ fontSize: "0.8rem" }}>Client Details • Line Items • Totals & Math</div>
               </div>
 
-              {/* Live Interactive Payment Action Banner Visual Preview */}
+              {/* Live Interactive Payment Action Banner Visual Preview (Soft Light Glass Theme) */}
               <div
                 style={{
-                  background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%)",
-                  color: "#ffffff",
+                  background: "linear-gradient(135deg, #f8fafc 0%, #eef2ff 60%, #f0fdf4 100%)",
+                  color: "#0f172a",
                   borderRadius: "14px",
                   padding: "1rem 1.25rem",
                   marginBottom: "1.5rem",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  boxShadow: "0 10px 25px rgba(30, 27, 75, 0.35)",
-                  border: "1px solid rgba(99, 102, 241, 0.35)",
+                  boxShadow: "0 6px 20px rgba(99, 102, 241, 0.08)",
+                  border: "1.5px solid #c7d2fe",
                 }}
               >
                 <div>
-                  <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#ffffff", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                  <div style={{ fontSize: "0.88rem", fontWeight: 800, color: "#1e1b4b", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                     💳 Secure Client Checkout Action Banner
                   </div>
                   <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.45rem", flexWrap: "wrap" }}>
-                    <span style={{ background: "rgba(255, 255, 255, 0.15)", color: "#fff", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
+                    <span style={{ background: "#e0e7ff", color: "#3730a3", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
                       💳 Card / Gateway
                     </span>
                     {bkashNumber ? (
-                      <span style={{ background: "rgba(236, 72, 153, 0.3)", color: "#f472b6", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
+                      <span style={{ background: "#fce7f3", color: "#be185d", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
                         💖 bKash ({bkashNumber})
                       </span>
                     ) : (
-                      <span style={{ background: "rgba(236, 72, 153, 0.15)", color: "#f472b6", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
+                      <span style={{ background: "rgba(252, 231, 243, 0.6)", color: "#be185d", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.8 }}>
                         💖 bKash
                       </span>
                     )}
                     {nagadNumber ? (
-                      <span style={{ background: "rgba(249, 115, 22, 0.3)", color: "#fb923c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
+                      <span style={{ background: "#ffedd5", color: "#c2410c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
                         🟠 Nagad ({nagadNumber})
                       </span>
                     ) : (
-                      <span style={{ background: "rgba(249, 115, 22, 0.15)", color: "#fb923c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
+                      <span style={{ background: "rgba(255, 237, 213, 0.6)", color: "#c2410c", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.8 }}>
                         🟠 Nagad
                       </span>
                     )}
                     {bankDetails ? (
-                      <span style={{ background: "rgba(59, 130, 246, 0.3)", color: "#60a5fa", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
+                      <span style={{ background: "#dbeafe", color: "#1d4ed8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700 }}>
                         🏦 Bank Wire
                       </span>
                     ) : (
-                      <span style={{ background: "rgba(59, 130, 246, 0.15)", color: "#60a5fa", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.7 }}>
+                      <span style={{ background: "rgba(219, 234, 254, 0.6)", color: "#1d4ed8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 500, opacity: 0.8 }}>
                         🏦 Bank Wire
                       </span>
                     )}
                   </div>
                 </div>
-                <div style={{ background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)", color: "#ffffff", padding: "0.55rem 1rem", borderRadius: "10px", fontSize: "0.8rem", fontWeight: 800, whiteSpace: "nowrap", boxShadow: "0 4px 12px rgba(99, 102, 241, 0.4)" }}>
+                <div style={{ background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)", color: "#ffffff", padding: "0.55rem 1rem", borderRadius: "10px", fontSize: "0.8rem", fontWeight: 800, whiteSpace: "nowrap", boxShadow: "0 4px 12px rgba(79, 70, 229, 0.3)" }}>
                   🔒 Pay Invoice Now
                 </div>
               </div>
