@@ -13,18 +13,28 @@ export async function POST(request) {
     if (apiKey) {
       console.log('Gemini API key found, calling Gemini...');
       try {
-        const prompt = `You are an expert AI Invoice & Estimate Parser. Parse the following user request into a structured JSON object.
-Automatically fix any spelling mistakes, typos, or grammatical errors in the user input (for example: "Istimate" or "estimat" -> documentType: "ESTIMATE", "invois" -> "INVOICE", "web devlopment" -> "Web Development").
-If a client name is mentioned (e.g. "for Sojib"), set "clientName" to "Sojib".
-Strictly output JSON in the following format with no markdown formatting:
+        const prompt = `You are a world-class AI Invoice & Estimate Parser that understands English, Banglish (Bengali written in Roman script e.g. "Sojib amar kache akta web development... 5 doller per hour. ami 120 hour kaj korechi. akhon tumi akta invoice banao"), and natural conversational text.
+Your job is to parse the user's request into a clean, structured JSON object.
+
+RULES:
+1. "clientName": Extract client/person/company name. Look for patterns like "Sojib amar kache...", "for Sojib", "Sojib-er jonno", "Client: Sojib" -> "Sojib".
+2. "documentType": "INVOICE" if words like "invoice", "banao", "bill", "invois" appear. "ESTIMATE" if "estimate", "istimate", "quote", "quotation" appear. Default "INVOICE".
+3. "items": Extract line items.
+   - "description": Summarize the work into a clean, professional English service title (e.g. "Web Development Service") instead of pasting raw chat sentences.
+   - "quantity": Extract total hours/days/qty (e.g. "120 hour kaj korechi" -> 120, "10 hrs" -> 10).
+   - "rate": Extract rate per hour/unit (e.g. "5 doller per hour", "$5/hr", "50$") -> 5.
+4. "discount": Discount percentage if mentioned, else 0.
+5. "tax": Tax percentage if mentioned, else 10.
+
+Strictly output valid JSON with no markdown syntax:
 {
-  "clientName": "Client or company name if mentioned e.g. Sojib",
-  "documentType": "INVOICE" or "ESTIMATE",
+  "clientName": "Sojib",
+  "documentType": "INVOICE",
   "items": [
-    { "description": "Clean, corrected description of work or service (e.g. Web Development - Landing Page)", "quantity": number, "rate": number }
+    { "description": "Web Development Service", "quantity": 120, "rate": 5 }
   ],
-  "discount": number,
-  "tax": number
+  "discount": 0,
+  "tax": 10
 }
 
 Input Text: "${text.replace(/"/g, '\\"')}"`;
@@ -69,25 +79,27 @@ Input Text: "${text.replace(/"/g, '\\"')}"`;
 function parseOffline(text) {
   const result = {
     clientName: '',
-    documentType: 'ESTIMATE',
+    documentType: 'INVOICE',
     items: [],
     discount: 0,
     tax: 10
   };
 
-  // 1. Document Type Detection (Fuzzy typo matching: Istimate, Estimat, Invois, Bill, etc.)
-  if (/invoice|invois|invice|bill/i.test(text)) {
+  // 1. Document Type Detection (Fuzzy typo & Banglish matching: invoice, banao, istimate, bill, etc.)
+  if (/invoice|invois|invice|bill|banao/i.test(text)) {
     result.documentType = 'INVOICE';
   } else if (/estimate|istimate|estimat|estmate|quote|quotation/i.test(text)) {
     result.documentType = 'ESTIMATE';
   }
 
-  // 2. Client / Company Name Extraction
-  const clientMatch =
-    text.match(/(?:for|to|client)\s+([A-Za-z0-9\s]+?)(?:\s+(?:service|project|invoice|estimate|quote|items|with)|$)/i) ||
-    text.match(/client\s*:?\s*([A-Za-z0-9\s]+)/i);
-  if (clientMatch) {
-    let rawName = clientMatch[1].trim();
+  // 2. Client Name Extraction (English & Banglish: "Sojib amar kache...", "for Sojib", "Sojib-er jonno")
+  const banglishClientMatch = text.match(/^([A-Z][a-z0-9]+)\s+(?:amar|kache|er|jonno|for|to)/i);
+  const englishClientMatch = text.match(/(?:for|to|client)\s+([A-Za-z0-9\s]+?)(?:\s+(?:service|project|invoice|estimate|quote|items|with|amar)|$)/i);
+
+  if (banglishClientMatch) {
+    result.clientName = banglishClientMatch[1].trim();
+  } else if (englishClientMatch) {
+    let rawName = englishClientMatch[1].trim();
     if (rawName && !/^(?:a|an|the|web|landing|development|service)$/i.test(rawName)) {
       result.clientName = rawName;
     }
@@ -104,58 +116,36 @@ function parseOffline(text) {
     result.tax = parseFloat(taxMatch[1]);
   }
 
-  // 4. Line Items Extraction with Rates & Quantities
-  const segments = text.split(/(?:and|,|\.)/gi);
-  for (const segment of segments) {
-    const trimmed = segment.trim();
-    if (!trimmed) continue;
+  // 4. Rate & Quantity Parsing (English & Banglish e.g. "5 doller per hour. ami 120 hour kaj korechi")
+  let rate = 50;
+  let quantity = 1;
 
-    // Pattern: [description] for [quantity] [units] at [rate]
-    let match = trimmed.match(/(.+?)\s+for\s+(\d+(?:\.\d+)?)\s*(?:hours|hrs|days|qty|units)?\s*(?:at\s*|\@\s*)\$?(\d+(?:\.\d+)?)/i);
-    if (match) {
-      result.items.push({
-        description: match[1].trim(),
-        quantity: parseFloat(match[2]),
-        rate: parseFloat(match[3])
-      });
-      continue;
-    }
-
-    // Pattern: [description] [quantity] [units] at [rate]
-    match = trimmed.match(/(.+?)\s+(\d+(?:\.\d+)?)\s*(?:hours|hrs|days|qty|units)?\s*(?:at\s*|\@\s*)\$?(\d+(?:\.\d+)?)/i);
-    if (match) {
-      const desc = match[1].trim();
-      if (!/^(?:create|apply|discount|tax|invoice|estimate|quote|istimate)/i.test(desc)) {
-        result.items.push({
-          description: desc,
-          quantity: parseFloat(match[2]),
-          rate: parseFloat(match[3])
-        });
-        continue;
-      }
-    }
+  const rateMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:doller|dollar|\$|usd|taka|tk)?\s*(?:per|\/)\s*(?:hour|hr|ghanta)/i) ||
+                    text.match(/(\d+(?:\.\d+)?)\s*(?:doller|dollar|\$|usd|taka|tk)\s*per/i);
+  if (rateMatch) {
+    rate = parseFloat(rateMatch[1]);
   }
 
-  // If no specific rate/qty item was parsed, extract the main service description
-  if (result.items.length === 0) {
-    let serviceDesc = "Web Development (Landing Page)";
-
-    // Clean out command keywords and typos
-    let cleanText = text
-      .replace(/^(?:create|make|build)?\s*(?:a|an)?\s*(?:invoice|estimate|istimate|quote)?\s*(?:for)?/gi, "")
-      .replace(/for\s+[A-Za-z0-9\s]+$/gi, "")
-      .trim();
-
-    if (cleanText) {
-      serviceDesc = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
-    }
-
-    result.items.push({
-      description: serviceDesc,
-      quantity: 1,
-      rate: 250
-    });
+  const qtyMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:hour|hrs|ghanta|ghonta|days|qty|units)/i);
+  if (qtyMatch) {
+    quantity = parseFloat(qtyMatch[1]);
   }
+
+  // Determine Service Description
+  let serviceDesc = "Web Development Service";
+  if (/landing\s*page/i.test(text)) {
+    serviceDesc = "Landing Page Web Development";
+  } else if (/ui|ux|design/i.test(text)) {
+    serviceDesc = "UI/UX Interface Design";
+  } else if (/app|mobile/i.test(text)) {
+    serviceDesc = "Mobile Application Development";
+  }
+
+  result.items.push({
+    description: serviceDesc,
+    quantity: quantity,
+    rate: rate
+  });
 
   return result;
 }

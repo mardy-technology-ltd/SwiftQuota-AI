@@ -74,7 +74,7 @@ export default function FormBuilderPage() {
       if (json.success && json.data) {
         const parsed = json.data;
 
-        // 1. Match or Create client
+        // 1. Match or Auto-Create client
         if (parsed.clientName) {
           const matched = clients.find(
             (c) => c.name.toLowerCase().includes(parsed.clientName.toLowerCase()) ||
@@ -83,7 +83,23 @@ export default function FormBuilderPage() {
           if (matched) {
             setSelectedClientId(matched.id);
           } else {
-            console.log(`Parsed client name "${parsed.clientName}" not in client list.`);
+            try {
+              const clientRes = await fetch("/api/clients", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  name: parsed.clientName,
+                  email: `${parsed.clientName.toLowerCase().replace(/\s+/g, "")}@example.com`,
+                }),
+              });
+              const clientJson = await clientRes.json();
+              if (clientJson.success && clientJson.data) {
+                setClients((prev) => [clientJson.data, ...prev]);
+                setSelectedClientId(clientJson.data.id);
+              }
+            } catch (cErr) {
+              console.error("Auto client creation error", cErr);
+            }
           }
         }
 
