@@ -130,23 +130,23 @@ export default function Home() {
           </p>
 
           <div className={styles.heroCtaGroup}>
-            <button className={styles.primaryCta}>
+            <Link href="/dashboard" className={styles.primaryCta}>
               Try Free Now
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </button>
+            </Link>
 
-            <button className={styles.secondaryCta}>
+            <a href="#demo" className={styles.secondaryCta}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Watch Demo (1 min)
-            </button>
+            </a>
           </div>
 
           {/* Interactive Floating Mockup Placeholder */}
-          <div className={styles.mockupContainer}>
+          <div className={styles.mockupContainer} id="demo">
             <div className={styles.mockupHeader}>
               <div className={styles.mockupDots}>
                 <span className={`${styles.dot} ${styles.dotRed}`}></span>
