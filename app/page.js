@@ -10,6 +10,7 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState(null);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [checkoutPlan, setCheckoutPlan] = useState("lifetime");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const mockPrompts = {
     "web-design": {
@@ -76,8 +77,40 @@ export default function Home() {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
+
+            <button
+              type="button"
+              className={styles.mobileMenuToggle}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? "✕" : "☰"}
+            </button>
           </nav>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className={styles.mobileDrawer}>
+            <a href="#features" className={styles.mobileDrawerLink} onClick={() => setMobileMenuOpen(false)}>
+              Features
+            </a>
+            <a href="#pricing" className={styles.mobileDrawerLink} onClick={() => setMobileMenuOpen(false)}>
+              Pricing
+            </a>
+            <a href="#faqs" className={styles.mobileDrawerLink} onClick={() => setMobileMenuOpen(false)}>
+              FAQs
+            </a>
+            <Link
+              href="/dashboard"
+              className={styles.mobileDrawerLink}
+              style={{ color: "#34d399", fontWeight: "700" }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ● Live DB Dashboard
+            </Link>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -288,7 +321,10 @@ export default function Home() {
                 </li>
               </ul>
               <button
-                onClick={() => {
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setCheckoutPlan("monthly");
                   setShowCheckoutModal(true);
                 }}
@@ -325,7 +361,10 @@ export default function Home() {
                 </li>
               </ul>
               <button
-                onClick={() => {
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setCheckoutPlan("lifetime");
                   setShowCheckoutModal(true);
                 }}
@@ -402,8 +441,8 @@ export default function Home() {
             <li><a href="#features" className={styles.footerLink}>Features</a></li>
             <li><a href="#pricing" className={styles.footerLink}>Pricing</a></li>
             <li><a href="#faqs" className={styles.footerLink}>FAQs</a></li>
-            <li><a href="#" className={styles.footerLink}>Privacy Policy</a></li>
-            <li><a href="#" className={styles.footerLink}>Terms of Service</a></li>
+            <li><Link href="/privacy" className={styles.footerLink}>Privacy Policy</Link></li>
+            <li><Link href="/terms" className={styles.footerLink}>Terms of Service</Link></li>
           </ul>
         </div>
 

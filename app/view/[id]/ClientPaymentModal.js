@@ -113,7 +113,11 @@ export default function ClientPaymentModal({
       if (json.success) {
         alert(json.message || "Payment submitted successfully!");
         onClose();
-        router.refresh();
+        if (json.redirectTo) {
+          router.push(json.redirectTo);
+        } else {
+          router.refresh();
+        }
       } else {
         alert(json.error || "Failed to submit payment details.");
       }
@@ -149,11 +153,15 @@ export default function ClientPaymentModal({
             {showPlanSelection ? "Upgrade & Complete Checkout" : "Complete Payment"}
           </h2>
           <p className={styles.darkModalSubtitle}>
-            Total Payable:{" "}
+            Total Payable Today:{" "}
             <span className={styles.highlightAmount}>
-              {currency} {currentPayableAmount.toFixed(2)}
-              {getBillingPeriodLabel()}
+              {selectedBillingCycle === "monthly" ? "USD 0.00 (14-Day Free Trial)" : `${currency} ${currentPayableAmount.toFixed(2)}${getBillingPeriodLabel()}`}
             </span>
+            {selectedBillingCycle === "monthly" && (
+              <span style={{ display: "block", fontSize: "0.78rem", color: "#94a3b8", marginTop: "0.15rem" }}>
+                Renews at $9.00/month after 14 days. Cancel anytime.
+              </span>
+            )}
           </p>
         </div>
         {!isInline && onClose && (
@@ -191,6 +199,7 @@ export default function ClientPaymentModal({
                   {selectedBillingCycle === "monthly" && <span className={styles.radioCheckInner}>✓</span>}
                 </div>
                 <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "#ffffff" }}>Solopreneur Monthly</span>
+                <span className={styles.discountTag} style={{ background: "#10b981", color: "#064e3b" }}>14-DAY FREE TRIAL</span>
               </div>
               <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "#ffffff" }}>$9/month</div>
             </div>
@@ -254,7 +263,10 @@ export default function ClientPaymentModal({
               <input
                 type="text"
                 required
-                autoComplete="off"
+                autoComplete="new-password"
+                data-lpignore="true"
+                data-form-type="other"
+                name="cc_num_dev"
                 placeholder="0000 0000 0000 0000"
                 value={cardNumber}
                 onChange={handleCardNumberChange}
@@ -274,7 +286,10 @@ export default function ClientPaymentModal({
                 <input
                   type="text"
                   required
-                  autoComplete="off"
+                  autoComplete="new-password"
+                  data-lpignore="true"
+                  data-form-type="other"
+                  name="cc_exp_dev"
                   placeholder="MM / YYYY"
                   value={cardExpiry}
                   onChange={handleExpiryChange}
@@ -287,7 +302,10 @@ export default function ClientPaymentModal({
                 <input
                   type="password"
                   required
-                  autoComplete="off"
+                  autoComplete="new-password"
+                  data-lpignore="true"
+                  data-form-type="other"
+                  name="cc_cvc_dev"
                   maxLength={4}
                   placeholder="CVC"
                   value={cardCvc}
@@ -336,7 +354,11 @@ export default function ClientPaymentModal({
               disabled={submitting}
               className={styles.darkPrimaryPayBtn}
             >
-              {submitting ? "Processing..." : `Pay ${currency} ${currentPayableAmount.toFixed(2)}`}
+              {submitting
+                ? "Processing..."
+                : selectedBillingCycle === "monthly"
+                ? "Start 14-Day Free Trial ($0.00 Today)"
+                : `Pay ${currency} ${currentPayableAmount.toFixed(2)}`}
             </button>
           </form>
         )}

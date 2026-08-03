@@ -136,7 +136,7 @@ export default function DashboardLayout({ children }) {
           </Link>
         </header>
 
-        <main style={{ padding: "2rem", flex: 1 }}>{children}</main>
+        <main className={styles.dashboardMainContainer}>{children}</main>
       </div>
     </div>
   );
