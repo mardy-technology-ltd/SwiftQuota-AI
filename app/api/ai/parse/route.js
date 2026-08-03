@@ -14,12 +14,14 @@ export async function POST(request) {
       console.log('Gemini API key found, calling Gemini...');
       try {
         const prompt = `You are an expert AI Invoice & Estimate Parser. Parse the following user request into a structured JSON object.
+Automatically fix any spelling mistakes, typos, or grammatical errors in the user input (for example: "Istimate" or "estimat" -> documentType: "ESTIMATE", "invois" -> "INVOICE", "web devlopment" -> "Web Development").
+If a client name is mentioned (e.g. "for Sojib"), set "clientName" to "Sojib".
 Strictly output JSON in the following format with no markdown formatting:
 {
-  "clientName": "Client or company name if mentioned e.g. BBC company",
+  "clientName": "Client or company name if mentioned e.g. Sojib",
   "documentType": "INVOICE" or "ESTIMATE",
   "items": [
-    { "description": "Description of work or service", "quantity": number, "rate": number }
+    { "description": "Clean, corrected description of work or service (e.g. Web Development - Landing Page)", "quantity": number, "rate": number }
   ],
   "discount": number,
   "tax": number
@@ -73,10 +75,10 @@ function parseOffline(text) {
     tax: 10
   };
 
-  // 1. Document Type Detection
-  if (/invoice/i.test(text)) {
+  // 1. Document Type Detection (Fuzzy typo matching: Istimate, Estimat, Invois, Bill, etc.)
+  if (/invoice|invois|invice|bill/i.test(text)) {
     result.documentType = 'INVOICE';
-  } else if (/estimate|quote/i.test(text)) {
+  } else if (/estimate|istimate|estimat|estmate|quote|quotation/i.test(text)) {
     result.documentType = 'ESTIMATE';
   }
 
@@ -86,7 +88,7 @@ function parseOffline(text) {
     text.match(/client\s*:?\s*([A-Za-z0-9\s]+)/i);
   if (clientMatch) {
     let rawName = clientMatch[1].trim();
-    if (rawName) {
+    if (rawName && !/^(?:a|an|the|web|landing|development|service)$/i.test(rawName)) {
       result.clientName = rawName;
     }
   }
@@ -123,7 +125,7 @@ function parseOffline(text) {
     match = trimmed.match(/(.+?)\s+(\d+(?:\.\d+)?)\s*(?:hours|hrs|days|qty|units)?\s*(?:at\s*|\@\s*)\$?(\d+(?:\.\d+)?)/i);
     if (match) {
       const desc = match[1].trim();
-      if (!/^(?:create|apply|discount|tax|invoice|estimate|quote)/i.test(desc)) {
+      if (!/^(?:create|apply|discount|tax|invoice|estimate|quote|istimate)/i.test(desc)) {
         result.items.push({
           description: desc,
           quantity: parseFloat(match[2]),
@@ -136,24 +138,22 @@ function parseOffline(text) {
 
   // If no specific rate/qty item was parsed, extract the main service description
   if (result.items.length === 0) {
-    let serviceDesc = "Professional Service";
+    let serviceDesc = "Web Development (Landing Page)";
 
-    // Clean out command keywords
+    // Clean out command keywords and typos
     let cleanText = text
-      .replace(/^create\s+(?:a|an)?\s*(?:invoice|estimate|quote)?\s*(?:for)?/gi, "")
-      .replace(/for\s+[A-Za-z0-9\s]+(?:company|ltd|inc|corp)/gi, "")
+      .replace(/^(?:create|make|build)?\s*(?:a|an)?\s*(?:invoice|estimate|istimate|quote)?\s*(?:for)?/gi, "")
+      .replace(/for\s+[A-Za-z0-9\s]+$/gi, "")
       .trim();
 
     if (cleanText) {
       serviceDesc = cleanText.charAt(0).toUpperCase() + cleanText.slice(1);
-    } else {
-      serviceDesc = "Roller Shutter Service";
     }
 
     result.items.push({
       description: serviceDesc,
       quantity: 1,
-      rate: 150
+      rate: 250
     });
   }
 
