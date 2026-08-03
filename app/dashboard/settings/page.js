@@ -690,8 +690,8 @@ export default function SettingsPage() {
                 <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                   <input
                     type="text"
-                    disabled
                     placeholder="0000 0000 0000 0000"
+                    maxLength={19}
                     style={{
                       width: "100%",
                       background: "#1e293b",
@@ -718,8 +718,8 @@ export default function SettingsPage() {
                   <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                     <input
                       type="text"
-                      disabled
                       placeholder="MM / YYYY"
+                      maxLength={7}
                       style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
                     />
                     <span style={{ position: "absolute", right: "1rem", fontSize: "0.95rem", opacity: 0.7 }}>📅</span>
@@ -728,8 +728,8 @@ export default function SettingsPage() {
                   <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                     <input
                       type="password"
-                      disabled
                       placeholder="CVC"
+                      maxLength={4}
                       style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
                     />
                     <span style={{ position: "absolute", right: "1rem", fontSize: "0.95rem", opacity: 0.7 }}>🛡️</span>
@@ -771,7 +771,6 @@ export default function SettingsPage() {
                 <div>
                   <input
                     type="text"
-                    disabled
                     placeholder="Postal code"
                     style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: "12px", padding: "0.8rem 1rem", color: "#ffffff", fontSize: "0.9rem", outline: "none" }}
                   />
