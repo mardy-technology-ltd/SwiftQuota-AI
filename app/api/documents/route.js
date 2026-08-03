@@ -19,7 +19,26 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ success: true, data: documents });
+    // Calculate current month's document count for Freemium limit
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const countThisMonth = await prisma.invoiceOrQuote.count({
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+        },
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: documents,
+      monthlyUsage: {
+        count: countThisMonth,
+        limit: 3,
+        remaining: Math.max(0, 3 - countThisMonth),
+      },
+    });
   } catch (error) {
     console.error('Error fetching documents:', error);
     return NextResponse.json(
@@ -55,6 +74,34 @@ export async function POST(request) {
           businessName: 'Apex Creative Agency',
         },
       });
+    }
+
+    // Freemium Limit Check: Max 3 free documents created per month
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const docsThisMonth = await prisma.invoiceOrQuote.count({
+      where: {
+        userId: user.id,
+        createdAt: {
+          gte: startOfMonth,
+        },
+      },
+    });
+
+    if (docsThisMonth >= 3) {
+      return NextResponse.json(
+        {
+          success: false,
+          limitReached: true,
+          error: "⚡ Monthly Free Limit Reached (3/3 used). Upgrade to Solopreneur ($9/mo) or Lifetime Pass ($39) for UNLIMITED AI invoicing & signatures!",
+          monthlyUsage: {
+            count: docsThisMonth,
+            limit: 3,
+            remaining: 0,
+          },
+        },
+        { status: 403 }
+      );
     }
 
     // Default client fallback if not provided

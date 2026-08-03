@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ClientPaymentModal from "@/app/view/[id]/ClientPaymentModal";
 import styles from "./form.module.css";
 
 export default function FormBuilderPage() {
   const router = useRouter();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [limitErrorMsg, setLimitErrorMsg] = useState("");
 
   // Document config
   const [docType, setDocType] = useState("ESTIMATE");
@@ -238,6 +241,11 @@ export default function FormBuilderPage() {
       if (json.success) {
         router.push("/dashboard/documents");
         router.refresh();
+      } else if (json.limitReached) {
+        setLimitErrorMsg(json.error || "Monthly free limit reached (3/3 used).");
+        setShowUpgradeModal(true);
+      } else {
+        alert(json.error || "Failed to save document.");
       }
     } catch (err) {
       console.error("Failed to save document", err);
@@ -758,6 +766,13 @@ export default function FormBuilderPage() {
             </form>
           </div>
         </div>
+      )}
+      {/* UPGRADE MODAL TRIGGERED WHEN 3 FREE DOCUMENTS/MONTH LIMIT IS REACHED */}
+      {showUpgradeModal && (
+        <ClientPaymentModal
+          onClose={() => setShowUpgradeModal(false)}
+          currency="USD"
+        />
       )}
     </div>
   );

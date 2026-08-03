@@ -9,12 +9,35 @@ export default async function DocumentsPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const countThisMonth = await prisma.invoiceOrQuote.count({
+    where: { createdAt: { gte: startOfMonth } },
+  });
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <div>
           <h1 style={{ fontSize: "1.8rem", fontWeight: 800 }}>All Documents</h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Manage invoices, estimates, and digital signatures</p>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "0.25rem" }}>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0 }}>
+              Manage invoices, estimates, and digital signatures
+            </p>
+            <span
+              style={{
+                background: countThisMonth >= 3 ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+                color: countThisMonth >= 3 ? "#fca5a5" : "#34d399",
+                border: `1px solid ${countThisMonth >= 3 ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)"}`,
+                padding: "0.2rem 0.6rem",
+                borderRadius: "20px",
+                fontSize: "0.75rem",
+                fontWeight: 700,
+              }}
+            >
+              ● {countThisMonth} / 3 Free Monthly Invoices Used
+            </span>
+          </div>
         </div>
         <Link
           href="/dashboard/documents/new"
